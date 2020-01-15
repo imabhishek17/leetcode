@@ -1,18 +1,15 @@
-static auto x = []() {ios_base::sync_with_stdio(false); cin.tie(NULL); return NULL; }();
-
 class Solution {
 public:
-     int findNumbers(vector<int>& nums) {
-        int ans = 0;
-        for(auto i=0;i<nums.size();i++)
+    vector<int> decompressRLElist(vector<int>& nums) {
+        vector<int> res;
+        
+        for(int i=0;i<nums.size();i=i+2) 
         {
-            int cnt = 0;
-            while(nums[i]) {
-                cnt++;
-                nums[i] /= 10;
-            }
-            ans += (cnt % 2 == 0);
+            int a=nums[i];
+            int b=nums[i+1];
+            for(int j=0;j<a;++j)
+                res.push_back(b);
         }
-        return ans;
+        return res;
     }
 };
