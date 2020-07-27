@@ -3761,7 +3761,7 @@ public:
 
 Time complexity : O(n^2).Since expanding a palindrome around its center could take O(n) time, the overall complexity is O(n^2).
 Space complexity : O(1)
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 REVERSE INTEGER
 
@@ -3801,5 +3801,485 @@ public:
 
 Time Complexity: O(log(x)). There are roughly log(base10)(x) digits in x.
 Space Complexity: O(1).
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+ create bst
+   OR
+  Function to create a new Node in heap
+  ---------------------------------------------------
+  
+  BstNode* GetNewNode(int data) {
+    BstNode* newNode = new BstNode();
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Insert into a Binary Search Tree
+
+
+For example, 
+
+Given the tree:
+        4
+       / \
+      2   7
+     / \
+    1   3
+And the value to insert: 5
+You can return this binary search tree:
+
+         4
+       /   \
+      2     7
+     / \   /
+    1   3 5
+This tree is also valid:
+
+         5
+       /   \
+      2     7
+     / \   
+    1   3
+         \
+          4
+------------------------------------------------------------------
+
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+    if (root == NULL) {
+        return false;
+    }
+    else if (root->val == val) {
+        return true;
+    }
+    else if (val <= root->val) {
+        return searchBST(root->left, val);
+    }
+    else {
+        return searchBST(root->right, val);
+    }
+    }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ To search an element in BST, returns true if element is found
+ ------------------------------------------------------------------------
+ 
+ bool Search(BstNode* root, int data) {
+    if (root == NULL) {
+        return false;
+    }
+    else if (root->data == data) {
+        return true;
+    }
+    else if (data <= root->data) {
+        return Search(root->left, data);
+    }
+    else {
+        return Search(root->right, data);
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Populating Next Right Pointers in Each Node
+
+PROBLEM STATEMENT : You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition:
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+Initially, all next pointers are set to NULL.
+
+Follow up:
+You may only use constant extra space.
+Recursive approach is fine, you may assume implicit stack space does not count as extra space for this problem.
+ 
+Example 1:
+Input: root = [1,2,3,4,5,6,7]
+Output: [1,#,2,3,#,4,5,6,7,#]
+Explanation: Given the above perfect binary tree (Figure A), your function should populate each next pointer to point to its next right node, just like in Figure B. The serialized output is in level order as connected by the next pointers, with '#' signifying the end of each level.
+
+--------------------------------------------------------------------------------------------------
+
+
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if(root == nullptr) return root;
+        int count = 0;
+        queue<Node*> q;
+        q.push(root);
+        
+        while(!q.empty())
+        {
+            int count = q.size();
+            while(count--)
+            {
+                Node* curr = q.front();
+                q.pop();
+                  if(count == 0) curr->next = nullptr;
+                else
+                    curr->next = q.front();
+                if(curr->left) q.push(curr->left);
+                if(curr->right) q.push(curr->right);
+            }
+        }
+        return root;
+    }
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Construct BST from given keys.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Validate Binary Search Tree
+     OR
+   check is a bt is bst or not leetcode
+
+
+Example 1:
+
+    2
+   / \
+  1   3
+Input: [2,1,3]
+Output: true
+Example 2:
+
+    5
+   / \
+  1   4
+     / \
+    3   6
+Input: [5,1,4,null,null,3,6]
+Output: false
+Explanation: The root node's value is 5 but its right child's value is 4.
+-----------------------------------------------------------------------------------
+
+APPROACH 1: (RECURSION)
+
+class Solution {
+  public :
+  bool helper(TreeNode* root, long lower, long upper) {
+    if (!root) return true;
+
+    return (lower<root->val && root->val<upper && helper(root->left, lower, root->val) && helper(root->right, root->val, upper));
+  }
+
+    bool isValidBST(TreeNode* root) {
+    return helper(root,LONG_MIN, LONG_MAX);
+  }
+};
+
+Time complexity : O(N) since we visit each node exactly once.
+Space complexity : O(N) since we keep up to the entire tree.
+........................................................
+
+APPROACH 2: (ITERATIVE SOLUTION)
+
+class Solution {
+public :
+  bool isValidBST(TreeNode* root) {
+    if (root == NULL) return true;
+    stack<TreeNode*> st;
+    TreeNode *curr = root;
+    TreeNode *prev = NULL;
+
+    while (curr != NULL || !st.empty()) {
+
+      while (curr != NULL) {
+        st.push(curr);
+        curr = curr->left;
+      }
+      curr = st.top(); st.pop();
+      if (prev != NULL && prev->val >= curr->val) return false;
+      prev = curr;
+      curr = curr->right;
+    }
+    return true;
+  }
+};
+
+Time complexity : O(N) since we visit each node exactly once.
+Space complexity : O(N) since we keep up to the entire tree.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Search in a Binary Search Tree
+  OR
+Search given Key in BST
+
+
+
+INPUT: Given the tree:
+        4
+       / \
+      2   7
+     / \
+    1   3
+And the value to search: 2
+
+ OUTPUT: You should return this subtree:
+
+      2     
+     / \   
+    1   3
+---------------------------------
+
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+    while (root != nullptr && root->val != val) 
+    {
+      if(root->val > val) 
+          root=root->left ;
+        else
+            root=root->right;
+    }
+    return root;
+    }
+};
+
+TIME: O(N).
+SPACE: O(1).
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Find the closest element in Binary Search Tree  (gfg)
+
+Input  :  k = 4
+Output :  4
+
+Input  :  k = 18
+Output :  17
+
+Input  :  k = 12
+Output :  9
+---------------------------------------------------------------------------------
+
+SOLUTION 1: (TIME EFFICIENT)
+
+#include<bits/stdc++.h> 
+using namespace std; 
+
+/* A binary tree node has key, pointer to left child 
+and a pointer to right child */
+struct Node 
+{ 
+	int key; 
+	struct Node* left, *right; 
+}; 
+
+/* Utility that allocates a new node with the 
+given key and NULL left and right pointers. */
+struct Node* newnode(int key) 
+{ 
+	struct Node* node = new (struct Node); 
+	node->key = key; 
+	node->left = node->right = NULL; 
+	return (node); 
+} 
+
+// Function to find node with minimum absolute 
+// difference with given K 
+// min_diff --> minimum difference till now 
+// min_diff_key --> node having minimum absolute 
+//				 difference with K 
+void maxDiffUtil(struct Node *ptr, int k, int &min_diff, 
+									int &min_diff_key) 
+{ 
+	if (ptr == NULL) 
+		return ; 
+
+	// If k itself is present 
+	if (ptr->key == k) 
+	{ 
+		min_diff_key = k; 
+		return; 
+	} 
+
+	// update min_diff and min_diff_key by checking 
+	// current node value 
+	if (min_diff > abs(ptr->key - k)) 
+	{ 
+		min_diff = abs(ptr->key - k); 
+		min_diff_key = ptr->key; 
+	} 
+
+	// if k is less than ptr->key then move in 
+	// left subtree else in right subtree 
+	if (k < ptr->key) 
+		maxDiffUtil(ptr->left, k, min_diff, min_diff_key); 
+	else
+		maxDiffUtil(ptr->right, k, min_diff, min_diff_key); 
+} 
+
+// Wrapper over maxDiffUtil() 
+int maxDiff(Node *root, int k) 
+{ 
+	// Initialize minimum difference 
+	int min_diff = INT_MAX, min_diff_key = -1; 
+
+	// Find value of min_diff_key (Closest key 
+	// in tree with k) 
+	maxDiffUtil(root, k, min_diff, min_diff_key); 
+
+	return min_diff_key; 
+} 
+
+// Driver program to run the case 
+int main() 
+{ 
+	struct Node *root = newnode(9); 
+	root->left = newnode(4); 
+	root->right = newnode(17); 
+	root->left->left = newnode(3); 
+	root->left->right = newnode(6); 
+	root->left->right->left = newnode(5); 
+	root->left->right->right = newnode(7); 
+	root->right->right = newnode(22); 
+	root->right->right->left = newnode(20); 
+	int k = 18; 
+	cout << maxDiff(root, k); 
+	return 0; 
+} 
+
+Time complexity : O(h) where h is height of given Binary Search Tree
+
+............................................
+
+ALTERNATE METHOD : (SPACE EFFICIENT)
+
+// CPP program to find closest value in 
+// a Binary Search Tree. 
+#include <iostream> 
+#include <limits.h> 
+using namespace std; 
+
+// Tree Node 
+struct Node { 
+	int data; 
+	Node *left, *right; 
+}; 
+
+// Utility function to create a new Node 
+Node* newNode(int data) 
+{ 
+	Node* temp = new Node(); 
+	temp->data = data; 
+	temp->left = temp->right = NULL; 
+	return temp; 
+} 
+
+// Function to find the Node closest to the 
+// given key in BST using Morris Traversal 
+Node* closestNodeUsingMorrisTraversal(Node* root, 
+										int key) 
+{ 
+	int diff = INT_MAX; 
+	Node* curr = root; 
+	Node* closest; 
+
+	while (curr) { 
+		if (curr->left == NULL) { 
+
+			// updating diff if the current diff is 
+			// smaller than prev difference 
+			if (diff > abs(curr->data - key)) { 
+				diff = abs(curr->data - key); 
+				closest = curr; 
+			} 
+
+			curr = curr->right; 
+		} 
+
+		else { 
+
+			// finding the inorder predecessor 
+			Node* pre = curr->left; 
+			while (pre->right != NULL && 
+				pre->right != curr) 
+				pre = pre->right; 
+
+			if (pre->right == NULL) { 
+				pre->right = curr; 
+				curr = curr->left; 
+			} 
+
+			// threaded link between curr and 
+			// its predecessor already exists 
+			else { 
+				pre->right = NULL; 
+
+				// if a closer Node found, then update 
+				// the diff and set closest to current 
+				if (diff > abs(curr->data - key)) { 
+					diff = abs(curr->data - key); 
+					closest = curr; 
+				} 
+
+				// moving to the right child 
+				curr = curr->right; 
+			} 
+		} 
+	} 
+
+	return closest; 
+} 
+
+// Driver Code 
+int main() 
+{ 
+	/* Constructed binary tree is 
+		5 
+		/ \ 
+	3	 9 
+	/ \ / \ 
+	1 2 8 12 */
+	Node* root = newNode(5); 
+	root->left = newNode(3); 
+	root->right = newNode(9); 
+	root->left->left = newNode(1); 
+	root->left->right = newNode(2); 
+	root->right->left = newNode(8); 
+	root->right->right = newNode(12); 
+
+	cout << closestNodeUsingMorrisTraversal(root, 10)->data; 
+
+	return 0; 
+} 
+
+Time Complexity: O(n)
+Auxillary Space : O(1)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+ 
+ 
+  
+  
+ 
