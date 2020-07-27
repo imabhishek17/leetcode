@@ -1780,3 +1780,2026 @@ int Solution::longestConsecutive(const vector<int> &A)
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 
+  Nth root of a number using log (GFG)
+-----------------------------------
+#include <bits/stdc++.h> 
+using namespace std;
+double kthRoot(double n, int k) 
+{ 
+    return pow(k, 
+               (1.0 / k) 
+                   * (log(n) 
+                      / log(k))); 
+} 
+
+int main(void) 
+{ 
+    double n = 81; 
+    int k = 4; 
+    printf("%lf ", kthRoot(n, k)); 
+    return 0; 
+} 
+
+Output:
+3.000000
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+  Matrix Median 
+
+  Input 1:
+    A = [   [1, 3, 5],
+            [2, 6, 9],
+            [3, 6, 9]   ]
+Output 1:  5
+Explanation 1:
+    A = [1, 2, 3, 3, 5, 6, 6, 9, 9]
+    Median is 5. So, we return 5.
+
+Input 2:
+    A = [   [5, 17, 100]    ]
+Output 2: 17
+--------------------------------------------------
+  
+ int Solution::findMedian(vector<vector<int> > &A) {
+      int n = A.size(), m = A[0].size();
+    int lo = INT_MAX, hi = INT_MIN;
+    for(int i=0; i<n; i++) {
+        lo = min(lo, A[i][0]);
+        hi = max(hi, A[i][m-1]);
+    }
+    int mid, res = -1;
+    int desiredIndex = (n*m+1)/2;
+    int currentIndex;
+    while(lo <= hi) {
+        mid = lo + (hi-lo)/2;
+        
+        currentIndex = 0;
+        for(int i=0; i<n; i++) {
+            currentIndex += upper_bound(A[i].begin(), A[i].end(), mid) - A[i].begin();
+        }
+        if(currentIndex < desiredIndex) {
+            lo = mid+1;
+        } else {
+            res = mid;
+            hi = mid-1;
+        }
+    }
+    return res;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Find Nth positive number whose digital root is X   (GFG)   (samjh nahi aaya)
+
+
+PROBLEM STATEMENT :  Given a number X ( 1<= X <= 9) and a positive number N, find the Nth positive number whose digital root is X. For example, the digital root of 65 is 2, because 6 + 5 = 11 and 1 + 1 = 2.
+.......
+Efficient Approach:
+We can find digital root of a number K directly using the formula:
+digitalRoot(k) = (k - 1)mod 9 +1
+From this we can find the N-th number whose digital root is K as,
+Nth number = (N - 1)*9 + K
+--------------------------------------------------------------------------
+#include <bits/stdc++.h> 
+using namespace std;   
+int findAnswer(int X, int N) 
+{ 
+    return (N - 1) * 9 + X; 
+} 
+
+int main() 
+{ 
+    int X = 7, N = 43; 
+  
+    cout << findAnswer(X, N); 
+  
+    return 0; 
+} 
+
+Output:
+385
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+  Digital Root (repeated digital sum) of the given large integer   (GFG)
+
+ Input : num = "1234"
+Output : 1
+Explanation : The sum of 1+2+3+4 = 10, 
+              digSum(x) == 10
+              Hence ans will be 1+0 = 1
+
+Input : num = "5674"
+Output : 4 
+------------------------------------------------------------
+
+#include <iostream> 
+using namespace std; 
+
+string convertToString(int sum) 
+{ 
+	string str = ""; 
+	while (sum) { 
+		str = str + (char)((sum % 10) + '0'); 
+		sum = sum / 10; 
+	}  
+	return str; 
+} 
+
+
+string GetIndividulaDigitSum(string str,int len) 
+{ 
+	int sum = 0; 
+	for (int i = 0; i < len; i++)
+    { 
+		sum = sum + str[i] - '0'; 
+	} 
+	return convertToString(sum); 
+} 
+
+int GetDigitalRoot(string str) 
+{  
+	if (str.length() == 1) 
+    { 
+		return str[0] - '0'; 
+	} 
+	str = GetIndividulaDigitSum(str,str.length()); 
+	return GetDigitalRoot(str); 
+} 
+int main() 
+{ 
+	string str 
+		= "675987890789756545689070986776987"; 
+
+	// Function to print final digit 
+	cout << GetDigitalRoot(str); 
+} 
+
+output: 5
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Happy Number (LEETCODE)
+
+Example: 
+
+Input: 19
+Output: true
+Explanation: 
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+----------------------------------------------------------------
+
+  class Solution {
+public:
+    bool isHappy(int n) 
+    {
+     unordered_set<int>mset;
+        int sum=0;
+        while(sum!=1)
+        {
+              sum=0;
+            while(n)
+            {
+                sum+=pow(n%10,2);
+                n/=10;
+            }
+            if(mset.count(sum))
+                return false;
+            else
+                mset.insert(sum);
+                
+            n=sum;
+        }
+        return true;
+    }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Search a 2D Matrix
+
+ Integers in each row are sorted from left to right.
+The first integer of each row is greater than the last integer of the previous row.
+..............
+Example 1:
+Input:
+matrix = [
+  [1,   3,  5,  7],
+  [10, 11, 16, 20],
+  [23, 30, 34, 50]
+]
+target = 3
+Output: true
+
+Example 2:
+Input:
+matrix = [
+  [1,   3,  5,  7],
+  [10, 11, 16, 20],
+  [23, 30, 34, 50]
+]
+target = 13
+Output: false
+--------------------------------------------------------------
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+   
+    if (matrix.size() == 0 || matrix[0].size() == 0)
+    {
+        return false;
+    }
+
+    int low;
+    int high;
+    for (low = 0, high = matrix.size() - 1; low <= high;)
+    {
+        int middle = (low + high) / 2;
+        if (matrix[middle][0] < target)
+        {
+            low = middle + 1;
+        }
+        else if (matrix[middle][0] > target)
+        {
+            high = middle - 1;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    int row = high;
+    if (row >= 0)
+    {
+        for (low = 0, high = matrix[row].size() - 1; low <= high;)
+        {
+            int middle = (low + high) / 2;
+            if (matrix[row][middle] < target)
+            {
+                low = middle + 1;
+            }
+            else if (matrix[row][middle] > target)
+            {
+                high = middle - 1;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+    }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+ Single Element in a Sorted Array(LEETCODE)
+      OR
+  Find the element that appears once in sorted array, and rest element appears twice
+
+Example 1:
+Input: nums = [1,1,2,3,3,4,4,8,8]
+Output: 2
+
+Example 2:
+Input: nums = [3,3,7,7,10,11,11]
+Output: 10
+
+Follow up: Your solution should run in O(log n) time and O(1) space.
+----------------------------------------------------------------------
+
+  class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+       
+        ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+        
+        int start=0, end = nums.size()-1, mid;
+        
+        if(end==0)                                      //  boundary conditions
+          return nums[0];
+        else if(nums[0]!=nums[1])
+            return nums[0];
+        else if(nums[end]!=nums[end-1])
+            return nums[end];
+                
+
+
+	while( start < end ) {
+		mid = start + (end-start)/2;
+		if( nums[mid] == nums[mid ^ 1] )                //if((mid % 2 == 0 && nums[mid] == nums[mid + 1]) || (mid % 2 == 1 && nums[mid] == nums[mid - 1]))
+	
+            start = mid + 1;
+		else
+			end = mid;
+	}
+	return nums[start];
+    }
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Search in Rotated Sorted Array  (LEETCODE)
+
+
+Example 1:
+
+Input: nums = [4,5,6,7,0,1,2], target = 0
+Output: 4
+Example 2:
+
+Input: nums = [4,5,6,7,0,1,2], target = 3
+Output: -1
+
+//there are no duplicates in the array
+----------------------------------------------------------
+
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int n=nums.size();
+        if(n==0)
+            return -1;
+        int i=0;
+        int j=n-1;
+        int m;
+        while(i<=j)
+        {
+            m=(i+j)/2;
+            if(nums[m]==target)
+                return m;
+            else if(nums[0]<=nums[m])
+            {
+                if(target>=nums[0]&&target<=nums[m])
+                    j=m-1;
+                else
+                    i=m+1;
+            }
+            else
+            {
+                if(target>=nums[m]&&target<=nums[n-1])
+                    i=m+1;
+                else
+                    j=m-1;
+            }
+        }
+        return -1;
+    }
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Search in Rotated Sorted Array II
+
+Example 1:
+
+Input: nums = [2,5,6,0,0,1,2], target = 0
+Output: true
+Example 2:
+
+Input: nums = [2,5,6,0,0,1,2], target = 3
+Output: false
+
+//duplicates are there
+-------------------------------------------------------------
+
+ class Solution {
+public:
+    bool search(vector<int>& nums, int target) {
+         int l = 0, r = nums.size() - 1;        
+        while(l <= r){  
+            int mid = l + (r - l) / 2;            
+            if(nums[mid] == target) return true;
+            if(nums[mid] > nums[r]){
+                if(target > nums[mid] || target <= nums[r]) l = mid + 1;    
+                else r = mid - 1;                                                               
+            }else if(nums[mid] == nums[r]){
+                r --;  
+            }
+            else{
+                if(target <= nums[r] && target > nums[mid]) l = mid + 1; 
+                else r = mid - 1;                                                               
+            }
+        }
+        return false;      
+    }
+};
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+Kth Largest Element of Two Sorted Arrays
+
+Example 1:
+
+Input: nums1 = [-2, -1, 3, 5, 6, 8], nums2 = [0, 1, 2, 5, 9], k = 4
+Output: 5
+Explanation: Union of above arrays will be [-2, -1, 0, 1, 2, 3, 5, 5, 6, 8, 9] and the 4th largest element is 5.
+Example 2:
+
+Input: nums1 = [2, 4], nums2 = [6], k = 1
+Output: 6
+Explanation: union of above arrays will be [2, 4, 6] and the 1st largest element is 6.
+
+Follow-up
+Can you do it in O(logk) time?
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   Median of Two Sorted Arrays (LEETCODE)
+            OR
+  Media of an array     
+
+Example 1:
+
+nums1 = [1, 3]
+nums2 = [2]
+
+The median is 2.0
+Example 2:
+
+nums1 = [1, 2]
+nums2 = [3, 4]
+
+The median is (2 + 3)/2 = 2.5
+-------------------------------------------
+
+  class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& A, vector<int>& B) {
+ int m = nums1.size(), n = nums2.size(), l = 0, r = m;
+    if (m > n) {
+        return findMedianSortedArrays(nums2, nums1);
+    }
+    while (l <= r) {
+        int i = (l + r) / 2, j = (m + n + 1) / 2 - i;
+        if (i && nums1[i - 1] > nums2[j]) {
+            r = i - 1;
+        } else if (i < m && nums2[j - 1] > nums1[i]) {
+            l = i + 1;
+        } else {
+            int lmax = !i ? nums2[j - 1] : (!j ? nums1[i - 1] : max(nums1[i - 1], nums2[j - 1]));
+            if ((m + n) % 2) {
+                return lmax;
+            }
+            int rmin = i == m ? nums2[j] : (j == n ? nums1[i] : min(nums1[i], nums2[j]));
+            return 0.5 * (lmax + rmin);
+        }
+    }
+    return 0.0;
+    }
+};
+
+TIME : O(log(min(m,n)))
+At first, the searching range is [0,m]. And the length of this searching range will be reduced by half after each loop. So, we only need log(m) loops. Since we do constant operations in each loop, so the time complexity is O(log(m)).  Since m≤n, so the time complexity is O(log(min(m,n))).
+
+SPACE : We only need constant memory to store 9 local variables, so the space complexity is O(1).
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Day of the Week
+
+
+Example 1:
+Input: day = 31, month = 8, year = 2019
+Output: "Saturday"
+
+Example 2:
+Input: day = 18, month = 7, year = 1999
+Output: "Sunday"
+
+Example 3:
+Input: day = 15, month = 8, year = 1993
+Output: "Sunday"
+
+-------------------------------------------
+
+  class Solution {
+public:
+    string dayOfTheWeek(int day, int month, int year) {
+                string daysInWeek [7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}; // 1
+        int DaysByMonthMod7[12] = {0,3,2,5,0,3,5,1,4,6,2,4}; // 2
+        if(month < 3) year -= 1; // 3
+        return daysInWeek[(year + (year/4 - year/100 + year/400) + DaysByMonthMod7[month-1] + day) % 7]; // 4
+ 
+    }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Kth Smallest Element in a Sorted Matrix
+
+Example:
+
+matrix = [
+   [ 1,  5,  9],
+   [10, 11, 13],
+   [12, 13, 15]
+],
+k = 8,
+
+return 13.
+---------------------------------------------------
+
+class Solution {
+public:
+    int kthSmallest(vector<vector<int>>& A, int B) {
+         int n = A.size(), l=A[0][0], r=A[n-1][n-1];
+        while(l<r)
+        {
+            int mn = 0, m = l+((r-l)/2);
+            for(int i = 0; i < n; i++) 
+                mn+=upper_bound(A[i].begin(), A[i].end(), m)-A[i].begin();
+              if(mn<B)
+              {
+                l=m+1;
+              }
+              else
+              {
+                  r=m;
+              }
+        }
+        return r;
+    }
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  Matrix Median
+
+
+  Input 1:
+    A = [   [1, 3, 5],
+            [2, 6, 9],
+            [3, 6, 9]   ]
+Output 1:  5
+Explanation 1:
+    A = [1, 2, 3, 3, 5, 6, 6, 9, 9]
+    Median is 5. So, we return 5.
+
+Input 2:
+    A = [   [5, 17, 100]    ]
+Output 2: 17
+--------------------------------------------------
+  
+ int Solution::findMedian(vector<vector<int> > &A) {
+      int n = A.size(), m = A[0].size();
+    int lo = INT_MAX, hi = INT_MIN;
+    for(int i=0; i<n; i++) {
+        lo = min(lo, A[i][0]);
+        hi = max(hi, A[i][m-1]);
+    }
+    int mid, res = -1;
+    int desiredIndex = (n*m+1)/2;
+    int currentIndex;
+    while(lo <= hi) {
+        mid = lo + (hi-lo)/2;
+        
+        currentIndex = 0;
+        for(int i=0; i<n; i++) {
+            currentIndex += upper_bound(A[i].begin(), A[i].end(), mid) - A[i].begin();
+        }
+        if(currentIndex < desiredIndex) {
+            lo = mid+1;
+        } else {
+            res = mid;
+            hi = mid-1;
+        }
+    }
+    return res;
+}
+
+We can use binary search on answer. In O(N log M), we can count how many elements are smaller than X in the matrix.
+So, we use binary search on interval [1, INT_MAX]. So, total complexity is O(30 * N log M).
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  Check if a number if a power of 2 or not in O(1)      
+
+ class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+    if(n<=0)return 0;
+      return !(n&(n-1));
+    }
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Given a HUGE number check if it’s a power of two.
+          OR
+ Check if a number if a power of 2 (FOR LARGE NUMBERS)     
+
+
+EXAMPLE:
+
+Input : 3 
+Output : 0
+2^0 = 1 where as k >= 1
+
+Input : 128
+Output : 1 
+--------------------------------------------------------------
+#include<bits/stdc++.h>
+#define int long long 
+using namespace std;
+
+
+int real(string A)
+{
+    int N=10*(A[0]-'0')+A[1]-'0';
+    return N/2;
+}
+int carry(string A)
+{
+    int N=10*(A[0]-'0')+A[1]-'0';
+    return N%2;
+}
+
+int power(string A)
+{
+    int N=A.size();
+    if(N==1)
+    {
+        if(A[0]=='2'||A[0]=='4'||A[0]=='8') return 1;
+        else return 0;
+    }
+    if((A[N-1]-'0')%2==1) return 0;
+    string ans="";
+    A="0"+A;
+    for(int i=1;i<N+1;i++){
+        if(i==1&&A[i-1]=='0'&&(A[i]=='0'||A[i]=='1')) continue;
+        string xx="";
+        xx+=A[i-1];
+        xx+=A[i];
+        ans+=real(xx)+'0';
+        A[i]=carry(xx)+'0';
+    }
+    return power(ans);
+}
+
+signed main() 
+{ 
+    string str;
+    cin>>str;
+    cout<<power(str);
+    return 0; 
+} 
+///////////////////////////////////////////////////////////////////////////////////////////
+
+Counting Bits
+
+Given a non negative integer number num. For every numbers i in the range 0 ≤ i ≤ num calculate the number of 1's in their binary representation and return them as an array.
+
+Example 1:
+
+Input: 2
+Output: [0,1,1]
+Example 2:
+
+Input: 5
+Output: [0,1,1,2,1,2]
+----------------------------------------------------
+
+class Solution {
+public:
+    vector<int> countBits(int num) {
+        vector<int> ret(num+1, 0);
+        for (int i = 1; i <= num; ++i)
+            ret[i] = ret[i&(i-1)] + 1;
+        return ret;
+    }
+};
+
+TIME : O(N) and SPACE : O(N).
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Number of 1 Bits
+
+
+
+Example 1:
+Input: 00000000000000000000000000001011
+Output: 3
+Explanation: The input binary string 00000000000000000000000000001011 has a total of three '1' bits.
+
+Example 2:
+Input: 00000000000000000000000010000000
+Output: 1
+Explanation: The input binary string 00000000000000000000000010000000 has a total of one '1' bit.
+
+Example 3:
+Input: 11111111111111111111111111111101
+Output: 31
+Explanation: The input binary string 11111111111111111111111111111101 has a total of thirty one '1' bits.
+
+----------------------------------------------------------
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int x=__builtin_popcount(n);
+        return x;
+    }
+};
+
+The run time depends on the number of bits in n. Because n in this piece of code is a 32-bit integer, the time complexity is O(1).
+The space complexity is O(1), since no additional space is allocated.
+
+
+ALTERNATE SOLUTION
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int x=0;
+      
+        while(n)
+        {
+          n=n&(n-1);
+          x++;
+        }
+        return x;
+    }
+};
+
+The run time depends on the number of 1-bits in n. In the worst case, all bits in n are 11-bits. In case of a 32-bit integer, the run time is O(1).
+The space complexity is O(1), since no additional space is allocated.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Divide Two Integers
+    OR
+Divide Integers without / operator
+
+
+
+Example 1:
+Input: dividend = 10, divisor = 3
+Output: 3
+Explanation: 10/3 = truncate(3.33333..) = 3.
+
+Example 2:
+Input: dividend = 7, divisor = -3
+Output: -2
+Explanation: 7/-3 = truncate(-2.33333..) = -2.
+--------------------------------------------------------
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+      long long sign;
+      
+      if((dividend<0)^(divisor<0))
+         sign =-1;
+       else
+         sign=1;
+      
+       long long dvd=dividend;
+       long long dvs=divisor;
+      
+       if(dvd==INT_MIN && dvs==-1)
+         return INT_MAX;
+      
+       dvd=abs(dvd);
+       dvs=abs(dvs);
+       
+      long long res=0;
+      
+      for(int i=31;i>=0;i--)
+      {
+        if(dvd>=(dvs<<i))
+        {
+          dvd-=(dvs<<i);
+          res+=(1<<i);    
+        }
+      }
+       return sign*res;
+    }
+};
+
+//////////////////////////////////////////////////////////////////////////////////
+
+  Subsets  (LEETCODE)
+     OR
+Power Set (this is very important)
+
+PROBLEM STATEMENT: Given a set of distinct integers, nums, return all possible subsets (the power set).
+Note: The solution set must not contain duplicate subsets.
+
+Example:
+Input: nums = [1,2,3]
+Output:
+[
+  [3],
+  [1],
+  [2],
+  [1,2,3],
+  [1,3],
+  [2,3],
+  [1,2],
+  []
+]
+-----------------------------------------
+
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+       int n = nums.size(), p = 1 << n;
+        vector<vector<int>> subs(p);
+        for (int i = 0; i < p; i++) {
+            for (int j = 0; j < n; j++) {
+                if ((i >> j) & 1) {
+                    subs[i].push_back(nums[j]);
+                }
+            }
+        }
+        return subs;
+    }
+};
+
+Time complexity: O(N * 2^N) to generate all subsets and then copy them into output list.
+Space complexity: O(N* 2^N) to keep all the subsets of length N, since each of N elements could be present or absent.
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+   Subsets II  (LEETCODE)
+
+PROBLEM STATEMENT: Given a collection of integers that might contain duplicates, nums, return all possible subsets (the power set).
+Note: The solution set must not contain duplicate subsets.
+
+Example:
+
+Input: [1,2,2]
+Output:
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+---------------------------------------------------------------
+
+  class Solution {
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        vector<vector<int>> dp;
+        
+        sort(nums.begin(), nums.end());
+
+        dp.push_back({});
+
+        for (auto i = 0; i < nums.size(); i++) {
+            auto size = dp.size();
+
+            for (auto j = 0; j < size; j++) {
+                auto v = dp[j];
+                bool found = false;
+
+                v.push_back(nums[i]);
+                for (auto k = 0; k < dp.size(); k++)
+                    if (v == dp[k]) {
+                        found = true;
+                        break;
+                    }
+
+                if (!found)
+                    dp.push_back(v);
+            }
+        }
+        return dp;
+    }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Find most significant set bit of a number
+
+Examples:
+
+Input : 10
+Output : 8
+Binary representation of 10 is 1010
+The most significant bit corresponds
+to decimal number 8.
+
+Input : 18
+Output : 16
+
+----------------------------------------------------------------
+#include <iostream> 
+using namespace std; 
+
+int setBitNumber(int n) 
+{ 
+   
+    n |= n >> 1; 
+    n |= n >> 2; 
+    n |= n >> 4; 
+    n |= n >> 8; 
+    n |= n >> 16; 
+    n = n + 1; 
+    return (n >> 1); 
+} 
+
+int main() 
+{ 
+    int n = 273; 
+    cout << setBitNumber(n); 
+    return 0; 
+} 
+
+OUTPUT: 256
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Find square of a number without using multiplication or division operators.
+
+---------------------------------------------------------------------------------
+
+SOLUTION 1 : (ADD ODD (INTUITIVE))
+
+#include <iostream>
+using namespace std;
+
+int findSquare(int num)
+{
+	int odd = 1;
+	int sq = 0;
+
+	// convert number to positive if it is negative
+	num = abs(num);
+
+	// add odd numbers num times to result
+	while (num--)
+	{
+		sq = sq + odd;
+		odd = odd + 2;
+	}
+
+	return sq;
+}
+
+int main()
+{
+	cout << findSquare(8) << " " << findSquare(-4);
+
+	return 0;
+}
+
+ALTERNATE SOLUTION : (USING BITMASKING)
+
+  #include <iostream>
+using namespace std;
+
+int findSquare(int num)
+{
+	// base case
+	if (num < 2)
+		return num;
+
+	// convert number to positive if it is negative
+	num = abs(num);
+
+	// drop last bit from num (divide it by 2)
+	int i = num >> 1;
+
+	// if num is odd
+	if (num & 1)
+		return ((findSquare(i) << 2) + (i << 2) + 1);
+
+	// if num is even
+	else
+		return (findSquare(i) << 2);
+}
+
+int main()
+{
+	cout << findSquare(8);
+
+	return 0;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Implement Stack using array
+
+---------------------------------
+
+#include <iostream>
+using namespace std;
+#define MAX_SIZE 101 
+
+class Stack
+{
+private:
+  int A[MAX_SIZE];  // array to store the stack
+    int top;   // variable to mark the top index of stack. 
+public:
+    // constructor
+    Stack()
+    {
+        top = -1; // for empty array, set top = -1
+    }
+
+    // Push operation to insert an element on top of stack. 
+    void Push(int x) 
+    {
+      if(top == MAX_SIZE -1) { // overflow case. 
+            printf("Error: stack overflow\n");
+            return;
+        }
+        A[++top] = x;
+    }
+ 
+    // Pop operation to remove an element from top of stack.
+    void Pop() 
+    {
+        if(top == -1) { // If stack is empty, pop should throw error. 
+            printf("Error: No element to pop\n");
+            return;
+        }
+        top--;
+    }
+ 
+    // Top operation to return element at top of stack. 
+    int Top() 
+    {
+        return A[top];
+    }
+ 
+    // This function will return 1 (true) if stack is empty, 0 (false) otherwise
+    int IsEmpty()
+    {
+        if(top == -1) return 1;
+        return 0;
+    }
+
+    // ONLY FOR TESTING - NOT A VALID OPERATION WITH STACK 
+    // This function is just to test the implementation of stack. 
+    // This will print all the elements in the stack at any stage. 
+    void Print() {
+        int i;
+        printf("Stack: ");
+        for(i = 0;i<=top;i++)
+            printf("%d ",A[i]);
+        printf("\n");
+    }
+};
+
+int main()
+{
+    // Code to test the implementation. 
+    // calling Print() after each push or pop to see the state of stack. 
+    Stack S;
+    S.Push(2);S.Print();
+    S.Push(5);S.Print();
+    S.Push(10);S.Print();
+    S.Pop();S.Print();
+    S.Push(12);S.Print();
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Implement Stack using linked list
+
+..........................................
+
+#include <iostream>
+using namespace std;
+#define MAX_SIZE 101 
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+typedef struct node node;
+
+node *top;
+
+void initialize()
+{
+    top = NULL;
+}
+
+void push(int value)
+{
+    node *tmp;
+    tmp = malloc(sizeof(node));
+    tmp -> data = value;
+    tmp -> next = top;
+    top = tmp;
+}
+
+int pop()
+{
+    node *tmp;
+    int n;
+    tmp = top;
+    n = tmp->data;
+    top = top->next;
+    free(tmp);
+    return n;
+}
+
+int Top()
+{
+    return top->data;
+}
+
+int isempty()
+{
+    return top==NULL;
+}
+
+void display(node *head)
+{
+    if(head == NULL)
+    {
+        printf("NULL\n");
+    }
+    else
+    {
+        printf("%d\n", head -> data);
+        display(head->next);
+    }
+}
+
+int main()
+{
+    initialize();
+    push(10);
+    push(20);
+    push(30);
+    printf("The top is %d\n",Top());
+    pop();
+    printf("The top after pop is %d\n",Top());
+    display(top);
+    return 0;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Implement Stack using Queues
+
+--------------------------------------------------
+
+/* Program to implement a stack 
+using two queue */
+#include <bits/stdc++.h> 
+using namespace std; 
+
+class Stack { 
+	queue<int> q1, q2; 
+	int curr_size; 
+
+public: 
+	Stack() 
+	{ 
+		curr_size = 0; 
+	} 
+
+	void pop() 
+	{ 
+		if (q1.empty()) 
+			return; 
+
+		// Leave one element in q1 and 
+		// push others in q2. 
+		while (q1.size() != 1) { 
+			q2.push(q1.front()); 
+			q1.pop(); 
+		} 
+
+		// Pop the only left element 
+		// from q1 
+		q1.pop(); 
+		curr_size--; 
+
+		// swap the names of two queues 
+		queue<int> q = q1; 
+		q1 = q2; 
+		q2 = q; 
+	} 
+
+	void push(int x) 
+	{ 
+		q1.push(x); 
+		curr_size++; 
+	} 
+
+	int top() 
+	{ 
+		if (q1.empty()) 
+			return -1; 
+
+		while (q1.size() != 1) { 
+			q2.push(q1.front()); 
+			q1.pop(); 
+		} 
+
+		// last pushed element 
+		int temp = q1.front(); 
+
+		// to empty the auxiliary queue after 
+		// last operation 
+		q1.pop(); 
+
+		// push last element to q2 
+		q2.push(temp); 
+
+		// swap the two queues names 
+		queue<int> q = q1; 
+		q1 = q2; 
+		q2 = q; 
+		return temp; 
+	} 
+
+	int size() 
+	{ 
+		return curr_size; 
+	} 
+}; 
+
+int main() 
+{ 
+	Stack s; 
+	s.push(1); 
+	s.push(2); 
+	s.push(3); 
+	s.push(4); 
+
+	cout << "current size: " << s.size() 
+		<< endl; 
+	cout << s.top() << endl; 
+	s.pop(); 
+	cout << s.top() << endl; 
+	s.pop(); 
+	cout << s.top() << endl; 
+	cout << "current size: " << s.size() 
+		<< endl; 
+	return 0; 
+} 
+
+current size: 4
+4
+3
+2
+current size: 2
+
+
+Version A (efficient push):
+push:
+enqueue in queue1
+pop:
+while size of queue1 is bigger than 1, pipe dequeued items from queue1 into queue2
+dequeue and return the last item of queue1, then switch the names of queue1 and queue2
+..................................................
+ALTERNATE SOLUTION:
+
+/* Program to implement a stack using 
+two queue */
+#include <bits/stdc++.h> 
+
+using namespace std; 
+
+class Stack { 
+	// Two inbuilt queues 
+	queue<int> q1, q2; 
+
+	// To maintain current number of 
+	// elements 
+	int curr_size; 
+
+public: 
+	Stack() 
+	{ 
+		curr_size = 0; 
+	} 
+
+	void push(int x) 
+	{ 
+		curr_size++; 
+
+		// Push x first in empty q2 
+		q2.push(x); 
+
+		// Push all the remaining 
+		// elements in q1 to q2. 
+		while (!q1.empty()) { 
+			q2.push(q1.front()); 
+			q1.pop(); 
+		} 
+
+		// swap the names of two queues 
+		queue<int> q = q1; 
+		q1 = q2; 
+		q2 = q; 
+	} 
+
+	void pop() 
+	{ 
+
+		// if no elements are there in q1 
+		if (q1.empty()) 
+			return; 
+		q1.pop(); 
+		curr_size--; 
+	} 
+
+	int top() 
+	{ 
+		if (q1.empty()) 
+			return -1; 
+		return q1.front(); 
+	} 
+
+	int size() 
+	{ 
+		return curr_size; 
+	} 
+}; 
+
+int main() 
+{ 
+	Stack s; 
+	s.push(1); 
+	s.push(2); 
+	s.push(3); 
+
+	cout << "current size: " << s.size() 
+		<< endl; 
+	cout << s.top() << endl; 
+	s.pop(); 
+	cout << s.top() << endl; 
+	s.pop(); 
+	cout << s.top() << endl; 
+
+	cout << "current size: " << s.size() 
+		<< endl; 
+	return 0; 
+} 
+
+current size: 3
+3
+2
+1
+current size: 1
+
+
+Version B (efficient pop):
+push:
+enqueue in queue2
+enqueue all items of queue1 in queue2, then switch the names of queue1 and queue2
+pop:
+deqeue from queue1
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Implement queue using array
+---------------------------------------
+
+/* Queue - Circular Array implementation in C++*/
+#include<iostream>
+using namespace std; 
+#define MAX_SIZE 101  //maximum size of the array that will store Queue. 
+
+// Creating a class named Queue.
+class Queue
+{
+private:
+	int A[MAX_SIZE];
+	int front, rear; 
+public:
+	// Constructor - set front and rear as -1. 
+	// We are assuming that for an empty Queue, both front and rear will be -1.
+	Queue()
+	{
+		front = -1; 
+		rear = -1;
+	}
+
+	// To check wheter Queue is empty or not
+	bool IsEmpty()
+	{
+		return (front == -1 && rear == -1); 
+	}
+
+	// To check whether Queue is full or not
+	bool IsFull()
+	{
+		return (rear+1)%MAX_SIZE == front ? true : false;
+	}
+
+	// Inserts an element in queue at rear end
+	void Enqueue(int x)
+	{
+		cout<<"Enqueuing "<<x<<" \n";
+		if(IsFull())
+		{
+			cout<<"Error: Queue is Full\n";
+			return;
+		}
+		if (IsEmpty())
+		{ 
+			front = rear = 0; 
+		}
+		else
+		{
+		    rear = (rear+1)%MAX_SIZE;
+		}
+		A[rear] = x;
+	}
+
+	// Removes an element in Queue from front end. 
+	void Dequeue()
+	{
+		cout<<"Dequeuing \n";
+		if(IsEmpty())
+		{
+			cout<<"Error: Queue is Empty\n";
+			return;
+		}
+		else if(front == rear ) 
+		{
+			rear = front = -1;
+		}
+		else
+		{
+			front = (front+1)%MAX_SIZE;
+		}
+	}
+	// Returns element at front of queue. 
+	int Front()
+	{
+		if(front == -1)
+		{
+			cout<<"Error: cannot return front from empty queue\n";
+			return -1; 
+		}
+		return A[front];
+	}
+	/* 
+	   Printing the elements in queue from front to rear. 
+	   This function is only to test the code. 
+	   This is not a standard function for Queue implementation. 
+	*/
+	void Print()
+	{
+		// Finding number of elements in queue  
+		int count = (rear+MAX_SIZE-front)%MAX_SIZE + 1;
+		cout<<"Queue       : ";
+		for(int i = 0; i <count; i++)
+		{
+			int index = (front+i) % MAX_SIZE; // Index of element while travesing circularly from front
+			cout<<A[index]<<" ";
+		}
+		cout<<"\n\n";
+	}
+};
+
+int main()
+{
+	/*Driver Code to test the implementation
+	  Printing the elements in Queue after each Enqueue or Dequeue 
+	*/
+   Queue Q; // creating an instance of Queue. 
+   Q.Enqueue(2);  Q.Print();  
+   Q.Enqueue(4);  Q.Print();  
+   Q.Enqueue(6);  Q.Print();
+   Q.Dequeue();	  Q.Print();
+   Q.Enqueue(8);  Q.Print();
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Implement queue using Linked list
+
+--------------------------------------------------------
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+// Two glboal variables to store address of front and rear nodes. 
+struct Node* front = NULL;
+struct Node* rear = NULL;
+
+// To Enqueue an integer
+void Enqueue(int x) {
+	struct Node* temp = 
+		(struct Node*)malloc(sizeof(struct Node));
+	temp->data =x; 
+	temp->next = NULL;
+	if(front == NULL && rear == NULL){
+		front = rear = temp;
+		return;
+	}
+	rear->next = temp;
+	rear = temp;
+}
+
+// To Dequeue an integer.
+void Dequeue() {
+	struct Node* temp = front;
+	if(front == NULL) {
+		printf("Queue is Empty\n");
+		return;
+	}
+	if(front == rear) {
+		front = rear = NULL;
+	}
+	else {
+		front = front->next;
+	}
+	free(temp);
+}
+
+int Front() {
+	if(front == NULL) {
+		printf("Queue is empty\n");
+		return;
+	}
+	return front->data;
+}
+
+void Print() {
+	struct Node* temp = front;
+	while(temp != NULL) {
+		printf("%d ",temp->data);
+		temp = temp->next;
+	}
+	printf("\n");
+}
+
+int main(){
+	/* Drive code to test the implementation. */
+	// Printing elements in Queue after each Enqueue or Dequeue 
+	Enqueue(2); Print(); 
+	Enqueue(4); Print();
+	Enqueue(6); Print();
+	Dequeue();  Print();
+	Enqueue(8); Print();
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Implement Queue using Stack
+
+--------------------------------------------------------
+
+USING TWO STACKS
+
+#include <iostream>
+#include <stack>
+#include <algorithm>
+#include <cstdlib>
+using namespace std;
+
+// Implement Queue using two stacks
+class Queue {
+	stack<int> s1, s2;
+
+public:
+	// Enqueue an item to the queue
+	void enqueue(int data)
+	{
+		// Push item into the first stack
+		s1.push(data);
+	}
+
+	// Dequeue an item from the queue
+	int dequeue()
+	{
+		// if both stacks are empty
+		if (s1.empty() && s2.empty()) {
+			cout << "Underflow!!";
+			exit(0);
+		}
+
+		// if second stack is empty, move elements from first stack to it
+		if (s2.empty()) {
+			while (!s1.empty()) {
+				s2.push(s1.top());
+				s1.pop();
+			}
+			// or make call to swap(s1, s2)
+		}
+
+		// return the top item from the second stack
+		int top = s2.top();
+		s2.pop();
+		return top;
+	}
+};
+
+int main()
+{
+	int keys[] = { 1, 2, 3, 4, 5 };
+	Queue q;
+
+	// insert above keys
+	for (int key : keys) {
+		q.enqueue(key);
+	}
+
+	cout << q.dequeue() << '\n';	// print 1
+	cout << q.dequeue() << '\n';	// print 2
+
+	return 0;
+}
+
+.....................................................................
+ALTERNATIVE SOLUTION: (IMPLEMENT ONE STACK WITH RECURSIVE CALL STACK)
+
+
+#include <iostream>
+#include <stack>
+#include <cstdlib>
+using namespace std;
+
+// Implement Queue using single stack
+class Queue {
+	stack<int> s;
+
+public:
+	// Enqueue an item to the queue
+	void enqueue(int data)
+	{
+		// Push item into the first stack
+		s.push(data);
+	}
+
+	// Dequeue an item from the queue
+	int dequeue()
+	{
+		// if stack is empty
+		if (s.empty()) {
+			cout << "Underflow!!";
+			exit(0);
+		}
+
+		// pop an item from the stack
+		int top = s.top();
+		s.pop();
+
+		// if stack becomes empty, return the popped item
+		if (s.empty()) {
+			return top;
+		}
+
+		// recur
+		int item = dequeue();
+
+		// push popped item back to the stack
+		s.push(top);
+
+		// return the result of dequeue() call
+		return item;
+	}
+};
+
+int main()
+{
+	int keys[] = { 1, 2, 3, 4, 5 };
+	Queue q;
+
+	// insert above keys into the queue
+	for (int key : keys) {
+		q.enqueue(key);
+	}
+
+	cout << q.dequeue() << '\n';	// print 1
+	cout << q.dequeue() << '\n';	// print 2
+
+	return 0;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Check for balanced parentheses
+
+---------------------------------------------------------------------
+
+#include<iostream>
+#include<stack>
+#include<string>
+using namespace std;
+// Function to check whether two characters are opening 
+// and closing of same type. 
+bool ArePair(char opening,char closing)
+{
+	if(opening == '(' && closing == ')') return true;
+	else if(opening == '{' && closing == '}') return true;
+	else if(opening == '[' && closing == ']') return true;
+	return false;
+}
+bool AreParanthesesBalanced(string exp)
+{
+	stack<char>  S;
+	for(int i =0;i<exp.length();i++)
+	{
+		if(exp[i] == '(' || exp[i] == '{' || exp[i] == '[')
+			S.push(exp[i]);
+		else if(exp[i] == ')' || exp[i] == '}' || exp[i] == ']')
+		{
+			if(S.empty() || !ArePair(S.top(),exp[i]))
+				return false;
+			else
+				S.pop();
+		}
+	}
+	return S.empty() ? true:false;
+}
+
+int main()
+{
+	/*Code to test the function AreParanthesesBalanced*/
+	string expression;
+	cout<<"Enter an expression:  "; // input expression from STDIN/Console
+	cin>>expression;
+	if(AreParanthesesBalanced(expression))
+		cout<<"Balanced\n";
+	else
+		cout<<"Not Balanced\n";
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Next Greater Element
+--------------------------------------------------------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+void printNGE(int arr[], int n) 
+{ 
+ stack < int > s; 
+
+s.push(arr[0]); 
+
+for (int i = 1; i < n; i++)
+ { 
+
+    if (s.empty()) { 
+    s.push(arr[i]); 
+    continue; 
+    } 
+
+    
+    while (s.empty() == false && s.top() < arr[i]) 
+    {        
+        cout << s.top() << " --> " << arr[i] << endl; 
+        s.pop(); 
+    } 
+
+   
+    s.push(arr[i]); 
+} 
+
+while (s.empty() == false) 
+  { 
+    cout << s.top() << " --> " << -1 << endl; 
+    s.pop(); 
+  } 
+} 
+
+
+int main() { 
+int arr[] = {11, 13, 21, 3}; 
+int n = sizeof(arr) / sizeof(arr[0]); 
+printNGE(arr, n); 
+return 0; 
+}
+
+TIME : O(N)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Next Smaller Element
+----------------------------------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+void printNSE(int arr[], int n) 
+{ 
+    stack<int> s; 
+
+        s.push(arr[0]); 
+
+    for (int i = 1; i < n; i++)
+     { 
+        if (s.empty())
+        { 
+            s.push(arr[i]); 
+            continue; 
+        } 
+
+       while (s.empty() == false && s.top() > arr[i]) 
+        { 
+            cout << s.top() << " --> " << arr[i] << endl; 
+            s.pop(); 
+        } 
+
+        s.push(arr[i]); 
+    } 
+
+    while (s.empty() == false) 
+    { 
+        cout << s.top() << " --> " << -1 << endl; 
+        s.pop(); 
+    } 
+} 
+
+int main() 
+{ 
+    int arr[] = { 11, 13, 21, 3 }; 
+    int n = sizeof(arr) / sizeof(arr[0]); 
+    printNSE(arr, n); 
+    return 0; 
+}
+
+TIME : O(N)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Reverse Words in a String
+
+Example 1:
+
+Input: "the sky is blue"
+Output: "blue is sky the"
+Example 2:
+
+Input: "  hello world!  "
+Output: "world! hello"
+Explanation: Your reversed string should not contain leading or trailing spaces.
+Example 3:
+
+Input: "a good   example"
+Output: "example good a"
+Explanation: You need to reduce multiple spaces between two words to a single space in the reversed string.
+---------------------------------------------------------------
+
+class Solution {
+public:
+    string reverseWords(string s) {
+          
+       int i,start,end,len=0;      
+       for(i=0;i<s.size();i++)
+      {
+        if(s[i]!=' ')
+        {
+          start=i;
+          break;
+        }
+      }
+      
+      for(i=s.size()-1;i>=0;i--)
+      {
+          if(s[i]!=' ')
+        {
+           end=i;
+           break;
+        }
+      }
+      
+      
+      for(i=start; i<=end; i++)
+      {
+        if(s[i]==' ' && s[i-1]==' ')
+          continue;
+        s[len++]=s[i];
+      }
+      
+      
+      s.erase(s.begin()+len, s.end());
+      
+      reverse(s.begin(),s.end());
+      
+      start=0;
+      for(i=0;i<s.size();i++)
+      {
+        if(s[i]==' ')
+        {
+          reverse(s.begin()+start, s.begin()+i);
+          start=(i+1);
+        }
+      }
+      
+      reverse(s.begin()+start, s.end());
+      return s;
+    }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ Longest Palindrome in a string
+       OR
+ Longest Palindromic Substring
+
+Example 1:
+
+Input: "babad"
+Output: "bab"
+Note: "aba" is also a valid answer.
+Example 2:
+
+Input: "cbbd"
+Output: "bb"
+------------------------------------------------------------
+
+APPROACH 1 : ( Brute Force)
+
+The obvious brute force solution is to pick all possible starting and ending positions for a substring, and verify if it is a palindrome.
+
+Complexity Analysis
+Time complexity : O(n^3). Assume that nn is the length of the input string, there are a total of (binomial)(n 2) = n(n−1)/2 such substrings (excluding the trivial solution where a character itself is a palindrome). Since verifying each substring takes O(n) time, the run time complexity is O(n^3)
+Space complexity : O(1).
+
+
+..............................................................................
+
+APPROACH 2 : (EXPAND AROUND CENTER)
+
+int expandFromMiddle(string s, int left, int right)
+     {
+       while(left>=0 && right<s.size() && s[left]==s[right])
+       {
+         left--;
+         right++;
+       }
+      return right-left-1;
+ }
+
+class Solution {
+public:
+  
+    string longestPalindrome(string s) {
+      
+      if(s.size()<2)return s;
+      
+      int start=0,end=0;
+      for(int i=0;i<s.size();i++)
+      {
+        int l1=expandFromMiddle(s, i, i);
+        int l2=expandFromMiddle(s, i, i+1);
+        int l=max(l1,l2);
+        if(l>end-start)
+        {
+          start=i-(l-1)/2;
+          end=i+(l/2);
+        }
+      }
+      
+      return s.substr(start,end-start+1);
+    }
+};
+
+Time complexity : O(n^2).Since expanding a palindrome around its center could take O(n) time, the overall complexity is O(n^2).
+Space complexity : O(1)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+REVERSE INTEGER
+
+
+Given a 32-bit signed integer, reverse digits of an integer.
+
+Example 1:
+Input: 123
+Output: 321
+Example 2:
+
+Input: -123
+Output: -321
+Example 3:
+
+Input: 120
+Output: 21
+
+Note:
+Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: [−231,  231 − 1]. For the purpose of this problem, assume that your function returns 0 when the reversed integer overflows.
+---------------------------------------------------------------------------
+
+  class Solution {
+public:
+    int reverse(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (rev > INT_MAX/10 || (rev == INT_MAX / 10 && pop > 7)) return 0;
+            if (rev < INT_MIN/10 || (rev == INT_MIN / 10 && pop < -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+};
+
+Time Complexity: O(log(x)). There are roughly log(base10)(x) digits in x.
+Space Complexity: O(1).
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
