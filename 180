@@ -1,4 +1,71 @@
- Find the duplicate in an array of N integers. 
+Write an Efficient C Program to Reverse Bits of a Number
+
+Input : n = 1
+Output : 2147483648  
+On a machine with size of unsigned
+bit as 32. Reverse of 0....001 is
+100....0.
+
+Input : n = 2147483648
+Output : 1  
+----------------------------------------------
+
+unsigned int reverseBits(unsigned int num) 
+{ 
+	unsigned int NO_OF_BITS = sizeof(num) * 8; 
+	unsigned int reverse_num = 0, i, temp; 
+
+	for (i = 0; i < NO_OF_BITS; i++) 
+	{ 
+		temp = (num & (1 << i)); 
+		if(temp) 
+			reverse_num |= (1 << ((NO_OF_BITS - 1) - i)); 
+	} 
+
+	return reverse_num; 
+} 
+
+int main() 
+{ 
+	unsigned int x = 2; 
+	printf("%u", reverseBits(x)); 
+	getchar(); 
+} 
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+......................................................
+SOLUTION 2: (OPTIMISED)
+
+unsigned int reverseBits(unsigned int num) 
+{ 
+	unsigned int count = sizeof(num) * 8 - 1; 
+	unsigned int reverse_num = num; 
+	
+	num >>= 1; 
+	while(num) 
+	{ 
+	reverse_num <<= 1;	 
+	reverse_num |= num & 1; 
+	num >>= 1; 
+	count--; 
+	} 
+	reverse_num <<= count; 
+	return reverse_num; 
+} 
+
+int main() 
+{ 
+	unsigned int x = 1; 
+	printf("%u", reverseBits(x)); 
+	getchar(); 
+} 
+
+Time Complexity: O(log n)
+Space Complexity: O(1)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+Find the duplicate in an array of N integers. 
              OR
    Find the Duplicate Number
    
@@ -25,9 +92,129 @@ public:
         return -1;
 	}
 };
+
+SOLUTION 3: (USING LOOKUP TABLE)
+
+// CPP program to reverse bits using lookup table. 
+#include<bits/stdc++.h> 
+using namespace std; 
+
+// Generate a lookup table for 32bit operating system 
+// using macro 
+#define R2(n)	 n,	 n + 2*64,	 n + 1*64,	 n + 3*64 
+#define R4(n) R2(n), R2(n + 2*16), R2(n + 1*16), R2(n + 3*16) 
+#define R6(n) R4(n), R4(n + 2*4 ), R4(n + 1*4 ), R4(n + 3*4 ) 
+
+// Lookup table that store the reverse of each table 
+unsigned int lookuptable[256] = { R6(0), R6(2), R6(1), R6(3) }; 
+
+/* Function to reverse bits of num */
+int reverseBits(unsigned int num) 
+{ 
+	int reverse_num = 0; 
+
+	// Reverse and then rearrange 
+
+				// first chunk of 8 bits from right 
+	reverse_num = lookuptable[ num & 0xff ]<<24 | 
+
+				// second chunk of 8 bits from right 
+				lookuptable[ (num >> 8) & 0xff ]<<16 | 
+
+				lookuptable[ (num >> 16 )& 0xff ]<< 8 | 
+				lookuptable[ (num >>24 ) & 0xff ] ; 
+	
+	return reverse_num; 
+} 
+
+int main() 
+{ 
+	int x = 12456; 
+	printf("%u", reverseBits(x));	 
+	return 0; 
+} 
+
+TIME: O(1)
 //////////////////////////////////////////////////////////////// 
-   
-   
+ 
+Program for Binary To Decimal Conversion  
+ 
+
+Examples :
+
+Input : 111
+Output : 7
+
+Input : 1010
+Output : 10
+
+Input: 100001
+Output: 33
+
+------------------------------------------------------
+#include <iostream> 
+#include <string> 
+using namespace std; 
+
+int binaryToDecimal(string n) 
+{ 
+	string num = n; 
+	int dec_value = 0; 
+ 
+	int base = 1; 
+	int len = num.length(); 
+	for (int i = len - 1; i >= 0; i--) { 
+		if (num[i] == '1') 
+			dec_value += base; 
+		base = base * 2; 
+	} 
+
+	return dec_value; 
+} 
+
+int main() 
+{ 
+	string num = "10101001"; 
+	cout << binaryToDecimal(num) << endl; 
+} 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Program for Decimal to Binary Conversion
+
+Examples:
+
+Input : 7
+Output : 111
+
+Input : 10
+Output : 1010
+
+Input: 33
+Output: 100001
+---------------------------------------------------------------------------------------
+#include <iostream> 
+using namespace std; 
+int decToBinary(int n) 
+{ 
+	for (int i = 31; i >= 0; i--) { 
+		int k = n >> i; 
+		if (k & 1) 
+			cout << "1"; 
+		else
+			cout << "0"; 
+	} 
+} 
+ 
+int main() 
+{ 
+	int n = 32; 
+	decToBinary(n); 
+} 
+
+Output :
+00000000000000000000000000100000
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Find All Duplicates in an Array(LEETCODE)
 Example:
 Input:
@@ -51,7 +238,8 @@ public:
         return vec;
     }
 };
-/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   Multiply Strings   (LEETCODE)
 
@@ -393,33 +581,6 @@ public:
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 
- Missing Number
-
-
-Example 1:
-
-Input: [3,0,1]
-Output: 2
-Example 2:
-
-Input: [9,6,4,2,3,5,7,0,1]
-Output: 8
-----------------------------------
-
-class Solution {
-public:
-    int missingNumber(vector<int>& nums) {
-       int sum=0;
-        for(int i=0;i<nums.size();i++)
-        {
-          sum^=nums[i]^(i+1);
-        }
-
-        return sum;
-    }
-};
-///////////////////////////////////////////////////////////////////////////////////////////
-
 Find All Numbers Disappeared in an Array
 
 Example:
@@ -447,7 +608,8 @@ public:
     }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-Merge Sorted Array
+
+ Merge two Sorted Array without any extra space.
 
 Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array.
 Note:
@@ -482,11 +644,11 @@ public:
     }
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
    Kadane’s Algorithm 
         OR
    Maximum Subarray(LEETCODE)
- 
+
 
    Example:
 
@@ -816,9 +978,307 @@ Complexity Analysis
 
 Time complexity : O(n). In worst case, only two scans of the whole array are needed.
 Space complexity : O(1). No extra space is used. In place replacements are done
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+Inversion of Array (Using Merge Sort)
 
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Best Time to Buy and Sell Stock 1
+
+Example 1:
+Input: [7,1,5,3,6,4]
+Output: 5
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+             Not 7-1 = 6, as selling price needs to be larger than buying price.
+Example 2:
+Input: [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transaction is done, i.e. max profit = 0.
+--------------------------------
+
+SOLUTION 1 : (BRUTE FORCE)
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        
+        if(!prices.size()) return 0;
+        
+        int maxprofit = 0;
+        for (int i = 0; i < prices.size() - 1; i++) {
+            for (int j = i + 1; j < prices.size(); j++) {
+                int profit = prices[j] - prices[i];
+                if (profit > maxprofit)
+                    maxprofit = profit;
+            }
+        }
+        return maxprofit;
+    }
+};
+.....................................................................
+
+SOLUTION 2: (OPTIMISED APPROACH)
+
+ class Solution {
+public:
+    int maxProfit(vector<int>& v) {
+     int mp=0,mn=INT_MAX;
+      int n=v.size();
+      for(int i=0;i<n;i++)
+      {
+        mn=min(mn,v[i]);
+        mp=max(mp,v[i]-mn);
+      }
+      return mp;
+    }
+};
+
+TIME : O(N)
+SPACE : O(1)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Best Time to Buy and Sell Stock II
+
+Example 1:
+Input: [7,1,5,3,6,4]
+Output: 7
+Explanation: Buy on day 2 (price = 1) and sell on day 3 (price = 5), profit = 5-1 = 4.
+             Then buy on day 4 (price = 3) and sell on day 5 (price = 6), profit = 6-3 = 3.
+
+Example 2:
+Input: [1,2,3,4,5]
+Output: 4
+Explanation: Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5-1 = 4.
+             Note that you cannot buy on day 1, buy on day 2 and sell them later, as you are
+             engaging multiple transactions at the same time. You must sell before buying again.
+
+Example 3:
+Input: [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transaction is done, i.e. max profit = 0.
+-----------------------------------------------------
+
+class Solution {
+public:
+    int maxProfit(vector<int>& v) {
+        int mp=0;
+        int n=v.size();
+        for(int i=0;i<n-1;i++)
+        {
+           if(v[i]<v[i+1])
+           {
+               mp+=(v[i+1]-v[i]);
+           }
+        }
+        return mp;
+    }
+};
+
+TIME :O(N)
+SPACE: O(1)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   Best Time to Buy and Sell Stock III
+
+  Example 1:
+Input: [3,3,5,0,0,3,1,4]
+Output: 6
+Explanation: Buy on day 4 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
+             Then buy on day 7 (price = 1) and sell on day 8 (price = 4), profit = 4-1 = 3.
+
+Example 2:
+Input: [1,2,3,4,5]
+Output: 4
+Explanation: Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5-1 = 4.
+             Note that you cannot buy on day 1, buy on day 2 and sell them later, as you are
+             engaging multiple transactions at the same time. You must sell before buying again.
+
+Example 3:
+Input: [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transaction is done, i.e. max profit = 0.
+-------------------------------------------------------------------
+
+  class Solution
+{
+ public:
+    int maxProfit(vector<int>& prices) 
+    {
+       int fb=INT_MIN,fs=0,sb=INT_MIN,ss=0;
+        
+        for(int i=0;i<prices.size();i++)
+        {
+            fb=max(fb,-prices[i]);
+            fs=max(fs,fb+prices[i]);
+            sb=max(sb,fs-prices[i]);
+            ss=max(ss,sb+prices[i]);
+        }
+        return ss;
+    }
+};
+
+TIME :O(N)
+SPACE: O(1)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   Best Time to Buy and Sell Stock IV
+
+  Example 1:
+Input: [2,4,1], k = 2
+Output: 2
+Explanation: Buy on day 1 (price = 2) and sell on day 2 (price = 4), profit = 4-2 = 2.
+
+Example 2:
+Input: [3,2,6,5,0,3], k = 2
+Output: 7
+Explanation: Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-2 = 4.
+             Then buy on day 5 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
+-----------------------------------------------------
+
+  class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+    
+        int n=prices.size();
+        if(n<=1 || k<=0) return 0;
+        
+        int profit=0;
+        if(k>=(n/2))
+        {
+            for(int i=0;i<n-1;i++)
+            {
+                if(prices[i]<prices[i+1])
+                profit+=(prices[i+1]-prices[i]);
+            }
+            return profit;
+        }
+        vector<int>buy(k,INT_MIN),sell(k);
+        
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<k;j++)
+            {
+                buy[j]=max(buy[j], j==0?0-prices[i]:sell[j-1]-prices[i]);
+                sell[j]=max(sell[j], buy[j]+prices[i]);
+            }
+        }
+        return sell[k-1];
+        
+        
+    }
+};
+
+TIME: O(nk)
+SPACE: O(nk).  
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Best Time to Buy and Sell Stock with Cooldown
+
+Example:
+Input: [1,2,3,0,2]
+Output: 3 
+Explanation: transactions = [buy, sell, cooldown, buy, sell]
+----------------------------------------------------------------
+
+   SOLUTION 1: (using DYNAMIC PROGRAMMING) 
+
+  class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+     
+        int n=prices.size();
+        
+        if(n<=1)
+            return 0;
+        
+        if(n==2 && prices[0]<prices[1]) 
+            return prices[1]-prices[0];
+        
+        vector<vector<int>>dp(n,vector<int>(2));
+        
+        dp[0][0]=0;
+        dp[0][1]=-prices[0];
+        dp[1][0]=max(dp[0][0],dp[0][1]+prices[1]);
+        dp[1][1]=max(dp[0][1],dp[0][0]-prices[1]);
+        
+        for(int i=2;i<n;i++)
+        {
+            dp[i][0]=max(dp[i-1][0],dp[i-1][1]+prices[i]);
+            dp[i][1]=max(dp[i-1][1],dp[i-2][0]-prices[i]);
+        }
+        return dp[n-1][0];
+    }
+};
+
+TIME:O(N)
+SPACE:O(N)
+........................
+
+  SOLUTION 2: (space optimised)
+
+  class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+     
+        if(prices.size()<=1)return 0;
+        
+       int sold = 0, hold = INT_MIN, rest = 0;
+    for (int i=0; i<prices.size(); ++i)
+    {
+        int prvSold = sold;
+        sold = hold + prices[i];
+        hold = max(hold, rest-prices[i]);
+        rest = max(rest, prvSold);
+    }
+    return max(sold, rest);
+    }
+};
+
+TIME:O(N)
+SPACE:O(1)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Best Time to Buy and Sell Stock with Transaction Fee
+
+ Example 1:
+Input: prices = [1, 3, 2, 8, 4, 9], fee = 2
+Output: 8
+Explanation: The maximum profit can be achieved by:
+Buying at prices[0] = 1
+Selling at prices[3] = 8
+Buying at prices[4] = 4
+Selling at prices[5] = 9
+The total profit is ((8 - 1) - 2) + ((9 - 4) - 2) = 8.
+---------------------------------------------------------
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices, int fee) {
+         int cash = 0, hold = -prices[0];
+        for (int i = 1; i < prices.size(); i++) {
+            cash = max(cash, hold + prices[i] - fee);
+            hold = max(hold, cash - prices[i]);
+        }
+        return cash;
+    }
+};
+
+TIME:O(N)
+SPACE:O(1)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   Rotate Image  
      OR
  Rotate Matrix  
@@ -922,8 +1382,10 @@ TIME: O(N^2)
 SPACE: O(N^2)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Lexicographically next permutation in C++ (GFG)
+
+  Lexicographically next permutation in C++ (GFG)
 ------------------------------------------------------
+
 #include <algorithm> 
 #include <iostream> 
 
@@ -946,7 +1408,8 @@ int main()
 ALTERNATIVE SOLUTION:
 
 #include <iostream> 
-using namespace std;
+
+using namespace std; 
 
 void swap(char* a, char* b) 
 { 
@@ -1009,6 +1472,7 @@ int main()
    TIME : O(logN) 
    SPACE: O(N)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
 Excel Sheet Column Number
 
 Given a column title as appear in an Excel sheet, return its corresponding column number.
@@ -1133,6 +1597,8 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Pow(x, n)
+   OR
+Find n^x in log N
 
 Example 1:
 Input: 2.00000, 10
@@ -1165,9 +1631,868 @@ public:
       }
     }
 };
+
+TIME: O(logn)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+ Factorial Trailing Zeroes
 
+Example 1:
+
+Input: 3
+Output: 0
+Explanation: 3! = 6, no trailing zero.
+Example 2:
+
+Input: 5
+Output: 1
+Explanation: 5! = 120, one trailing zero.
+
+Note: Your solution should be in logarithmic time complexity.
+----------------------------------------------
+
+class Solution {
+public:
+    int trailingZeroes(int n) {
+      int c=0;
+      while(n>0)
+      {
+        c+=n/5;
+        n/=5;
+      }
+      return c;
+        
+      
+    }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Find GCD in Log N
+ 
+--------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+  
+int gcd(int a, int b) 
+{ 
+    if (a == 0) 
+        return b; 
+    return gcd(b % a, a); 
+} 
+int main() 
+{ 
+    int a = 10, b = 15; 
+    cout << "GCD(" << a << ", " 
+         << b << ") = " << gcd(a, b)  
+                        << endl; 
+    a = 35, b = 10; 
+    cout << "GCD(" << a << ", " 
+         << b << ") = " << gcd(a, b)  
+                        << endl; 
+    a = 31, b = 2; 
+    cout << "GCD(" << a << ", " 
+         << b << ") = " << gcd(a, b) << endl; 
+    return 0; 
+} 
+
+GCD(10, 15) = 5
+GCD(35, 10) = 5
+GCD(31, 2) = 1
+Time Complexity: O(Log min(a, b))
+
+............................................
+ALTERNATE SOLUTION:(Extended Euclidean Algorithm)
+ (i.e. ax + by = gcd(a, b)) 
+
+
+#include <bits/stdc++.h>  
+using namespace std; 
+int gcdExtended(int a, int b, int *x, int *y)  
+{  
+    if (a == 0)  
+    {  
+        *x = 0;  
+        *y = 1;  
+        return b;  
+    }  
+    int x1, y1;  
+    int gcd = gcdExtended(b%a, a, &x1, &y1);  
+    *x = y1 - (b/a) * x1;  
+    *y = x1;  
+  
+    return gcd;  
+}  
+  
+int main()  
+{  
+    int x, y, a = 35, b = 15;  
+    int g = gcdExtended(a, b, &x, &y);  
+    cout << "GCD(" << a << ", " << b  
+         << ") = " << g << endl; 
+    return 0;  
+}  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Program to find LCM of 2 numbers without using GCD
+
+Examples:
+
+Input: 7, 5
+Output: 35
+
+Input: 2, 6
+Output: 6
+----------------------------------------
+#include <bits/stdc++.h> 
+using namespace std; 
+ 
+int findLCM(int a, int b) 
+{ 
+	int lar = max(a, b); 
+	int small = min(a, b); 
+	for (int i = lar; ; i += lar) { 
+		if (i % small == 0) 
+			return i; 
+	} 
+} 
+
+int main() 
+{ 
+	int a = 5, b = 7; 
+	cout << "LCM of " << a << " and "
+		<< b << " is " << findLCM(a, b); 
+	return 0; 
+} 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+GCD of more than two (or array) numbers
+
+Input  : arr[] = {1, 2, 3}
+Output : 1
+
+Input  : arr[] = {2, 4, 6, 8}
+Output : 2
+------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+  
+// Function to return gcd of a and b 
+int gcd(int a, int b) 
+{ 
+    if (a == 0) 
+        return b; 
+    return gcd(b % a, a); 
+} 
+  
+// Function to find gcd of array of 
+// numbers 
+int findGCD(int arr[], int n) 
+{ 
+    int result = arr[0]; 
+    for (int i = 1; i < n; i++) 
+    { 
+        result = gcd(arr[i], result); 
+  
+        if(result == 1) 
+        { 
+           return 1; 
+        } 
+    } 
+    return result; 
+} 
+  
+// Driver code 
+int main() 
+{ 
+    int arr[] = { 2, 4, 6, 8, 16 }; 
+    int n = sizeof(arr) / sizeof(arr[0]); 
+    cout << findGCD(arr, n) << endl; 
+    return 0; 
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  Unique path 1
+    OR
+ Grid Unique Paths
+
+Example 1:
+Input: m = 3, n = 2
+Output: 3
+Explanation:
+From the top-left corner, there are a total of 3 ways to reach the bottom-right corner:
+1. Right -> Right -> Down
+2. Right -> Down -> Right
+3. Down -> Right -> Right
+
+Example 2:
+Input: m = 7, n = 3
+Output: 28
+----------------------------------
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        
+      vector<vector<int>>dp(m,vector<int>(n));
+      
+      for(int i=0;i<n;i++)
+      {
+         dp[0][i]=1;
+      }
+    
+     for(int i=0;i<m;i++)
+     {
+        dp[i][0]=1;
+     }
+        
+      for(int i=1;i<m;i++)
+      {
+        for(int j=1;j<n;j++)
+        {
+          dp[i][j]=dp[i-1][j]+dp[i][j-1];
+        }
+      }
+      return dp[m-1][n-1];
+    }
+};
+
+TIME: O(N*M)
+SPACE: O(N*M)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  Unique Paths II
+
+Example 1:
+Input:
+[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+Output: 2
+Explanation:
+There is one obstacle in the middle of the 3x3 grid above.
+There are two ways to reach the bottom-right corner:
+1. Right -> Right -> Down -> Down
+2. Down -> Down -> Right -> Right
+------------------------------------------------------------
+
+  SOLUTION 1: (using DYNAMIC PROGRAMMING)
+
+  class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& v) {
+        
+        int m=v.size(),n=v[0].size();
+        vector<vector<int>>dp(m,vector<int>(n));
+        
+        for(int i=0;i<n;i++)
+        {
+              if(v[0][i]==1)
+              break;
+              dp[0][i]=1;
+        }
+        for(int i=0;i<m;i++)
+        {
+              if(v[i][0]==1)
+              break;
+              dp[i][0]=1;
+        }
+        
+        for(int i=1;i<m;i++)
+        {
+            for(int j=1;j<n;j++)
+            {
+                if(v[i][j]==0)
+                    dp[i][j]=dp[i-1][j]+dp[i][j-1];
+            }
+        }
+        return dp[m-1][n-1];
+    }
+};
+
+TIME: O(N*M)
+SPACE: O(N*M)
+......................................
+
+SOLUTION 2: (SPACE OPTIMISED)
+
+ class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>&v) {
+      
+      int r=v.size();
+      int c=v[0].size();
+      
+      if(v[0][0]==1)return 0;
+      
+      v[0][0]=1;
+      
+      for(int i=1;i<c;i++)
+      {
+        if(v[0][i]==0 && v[0][i-1]==1)
+        {
+          v[0][i]=1;
+        }
+        else
+        {
+          v[0][i]=0;
+        }
+      }
+      
+      for(int i=1;i<r;i++)
+      {
+        if(v[i][0]==0 && v[i-1][0]==1)
+        {
+          v[i][0]=1;
+        }
+        else
+        {
+          v[i][0]=0;
+        }
+      }
+      
+      for(int i=1;i<r;i++)
+      {
+        for(int j=1;j<c;j++)
+        {
+          if(v[i][j]==0)
+          {
+            v[i][j]=v[i-1][j]+v[i][j-1];
+          }
+          else
+          {
+            v[i][j]=0;
+          }
+        }
+      }
+      
+      return v[r-1][c-1];
+    }
+};
+
+TIME: O(N*M)
+SPACE: O(1)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+ Unique Paths III
+
+  On a 2-dimensional grid, there are 4 types of squares:
+1 represents the starting square.  There is exactly one starting square.
+2 represents the ending square.  There is exactly one ending square.
+0 represents empty squares we can walk over.
+-1 represents obstacles that we cannot walk over.
+Return the number of 4-directional walks from the starting square to the ending square, that walk over every non-obstacle square exactly once.
+
+Example 1:
+Input: [[1,0,0,0],[0,0,0,0],[0,0,2,-1]]
+Output: 2
+Explanation: We have the following two paths: 
+1. (0,0),(0,1),(0,2),(0,3),(1,3),(1,2),(1,1),(1,0),(2,0),(2,1),(2,2)
+2. (0,0),(1,0),(2,0),(2,1),(1,1),(0,1),(0,2),(0,3),(1,3),(1,2),(2,2)
+
+Example 2:
+Input: [[1,0,0,0],[0,0,0,0],[0,0,0,2]]
+Output: 4
+Explanation: We have the following four paths: 
+1. (0,0),(0,1),(0,2),(0,3),(1,3),(1,2),(1,1),(1,0),(2,0),(2,1),(2,2),(2,3)
+2. (0,0),(0,1),(1,1),(1,0),(2,0),(2,1),(2,2),(1,2),(0,2),(0,3),(1,3),(2,3)
+3. (0,0),(1,0),(2,0),(2,1),(2,2),(1,2),(1,1),(0,1),(0,2),(0,3),(1,3),(2,3)
+4. (0,0),(1,0),(2,0),(2,1),(1,1),(0,1),(0,2),(0,3),(1,3),(1,2),(2,2),(2,3)
+
+Example 3:
+Input: [[0,1],[2,0]]
+Output: 0
+Explanation: 
+There is no path that walks over every empty square exactly once.
+Note that the starting and ending square can be anywhere in the grid.
+-----------------------------------------------------
+   
+  SOLUTION 1: (using DFS)
+
+ class Solution {
+ int startx,starty,endx,endy,path,m,n,ans=0;     
+    
+ void dfs(vector<vector<int>> grid, int i, int j, int p)
+    {
+        if(i<0 || i>=m || j<0 || j>=n || grid[i][j]==-1) return ;
+        
+        if(i==endx && j==endy && p==path)
+        { 
+         ans++;
+         return ;
+        }
+        grid[i][j]=-1;
+         dfs(grid, i, j+1, p+1);
+         dfs(grid, i+1, j, p+1);
+         dfs(grid, i, j-1, p+1);
+         dfs(grid, i-1, j, p+1);
+    }
+    
+public:
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        
+        m=grid.size(),n=grid[0].size();
+        path=m*n;
+        
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]==1)
+                {
+                    startx=i;
+                    starty=j;
+                }
+                else if(grid[i][j]==2)
+                {
+                    endx=i;
+                    endy=j;
+                }
+                else if(grid[i][j]==-1)
+                {
+                    path--;
+                }
+            }
+        }
+        dfs(grid,startx,starty,1);
+        return ans;    
+    }
+};
+
+  Time Complexity: O(4^(R*C)), where R,C are the number of rows and columns in the grid.
+  Space Complexity: O(R*C).
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Valid Mountain Array (LEETCODE)
+
+Example 1:
+Input: [2,1]
+Output: false
+
+Example 2:
+Input: [3,5,5]
+Output: false
+
+Example 3:
+Input: [0,3,2,1]
+Output: true
+----------------------
+
+class Solution {
+public:
+    bool validMountainArray(vector<int>& a) {
+        
+        int n=a.size();
+        
+        int i=0,j=n-1;
+        
+        while(i+1<n && a[i]<a[i+1])i++;
+        while(j>0 && a[j-1]>a[j])j--;
+        
+        return (i>0 && i==j && j<n-1);
+        
+    }
+};
+
+Time Complexity: O(N), where N is the length of A.
+Space Complexity: O(1)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Two Sum
+
+ Example:
+Given nums = [2, 7, 11, 15], target = 9,
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+--------------------------------------
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& A, int B) {
+     int n = A.size();
+    vector<int> v;
+    if (n < 2) {
+        return v;
+    }
+    unordered_map<int, int> seen;
+    seen.reserve(A.size());
+    for (int i = 0; i < A.size(); ++i) {
+        long long target = B - A[i];
+        if (target < INT_MIN || target > INT_MAX) continue;
+        auto it = seen.find(target);
+        if (it != seen.end())
+            return vector<int>{ it->second , i  };
+        seen.insert(make_pair(A[i], i));
+    }
+    return vector<int>{};
+    }
+};
+
+Time complexity : O(n). We traverse the list containing n elements only once. Each look up in the table costs only O(1) time.
+Space complexity : O(n). The extra space required depends on the number of items stored in the hash table, which stores at most n elements.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Two Sum II - Input array is sorted(LEETCODE)             (JUST UPPER WAALE KI TARAH SAME HAI BAS +1 KAR DIA INDEXES MAI RETURN KARATE TIME)
+
+  Example:
+Input: numbers = [2,7,11,15], target = 9
+Output: [1,2]
+Explanation: The sum of 2 and 7 is 9. Therefore index1 = 1, index2 = 2.
+-----------------------------------------------------------------------------
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& A, int B) {
+         int n = A.size();
+    vector<int> v;
+    if (n < 2) {
+        return v;
+    }
+    unordered_map<int, int> seen;
+    seen.reserve(A.size());
+    for (int i = 0; i < A.size(); ++i) {
+        long long target = B - A[i];
+        if (target < INT_MIN || target > INT_MAX) continue;
+        auto it = seen.find(target);
+        if (it != seen.end())
+            return vector<int>{ it->second+1 , i+1  };
+        seen.insert(make_pair(A[i], i));
+    }
+    return vector<int>{};
+    }
+};
+
+Time complexity : O(n). We traverse the list containing n elements only once. Each look up in the table costs only O(1) time.
+Space complexity : O(n). The extra space required depends on the number of items stored in the hash table, which stores at most n elements.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Two Sum Less Than K
+
+Given an array A of integers and integer K, return the maximum S such that there exists i < j with A[i] + A[j] = S and S < K. If no i, j exist satisfying this equation, then return -1.
+
+Example 1:
+Input: A = [34,23,1,24,75,33,54,8], K = 60
+Output: 58
+Explanation: 
+We can use 34 and 24 to sum 58 which is less than 60.
+
+Example 2:
+Input: A = [10,20,30], K = 15
+Output: -1
+Explanation: 
+In this case it's not possible to get a pair sum less that 15.
+----------------------------------------------------------------------
+
+ class Solution {
+      public:
+
+       int twoSumLessThanK(vector<int>A, int K)
+        {
+          int res = -1;
+
+          if(A == NULL || A.length == 0)
+          {
+              return res;
+          }
+          
+          sort(A.begin(),A.end());
+
+          int l = 0;
+         int r  = A.length-1;
+        
+         while(l<r)
+         {
+             int sum = A[l] + A[r];
+             if(sum < K)
+             {
+                 res = Math.max(res, sum);
+                 l++;
+             }
+             else
+             {
+                 r--;
+             }
+         }
+         return res;
+     }
+ }
+
+Time Complexity: O(nlogn), n = A.length.
+Space: O(1).
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Two Sum IV - Input is a BST
+
+Example 1:
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+Target = 9
+Output: True
+
+Example 2:
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 28
+Output: False
+----------------------------------------
+
+SOLUTION 1: (SET)
+
+  class Solution
+{
+  public:
+  
+    bool dfs(TreeNode* root, int k, set<int>s) 
+    {
+        if (root == NULL) return false;
+        if (s.count(k - root->val)) return true;
+        s.insert(root->val);
+        return dfs(root->left, k, s) || dfs(root->right, k, s);
+    }    
+    bool findTarget(TreeNode* root, int k) 
+    {
+         set<int>s;
+        return dfs(root, k, s);
+    }  
+};
+
+Time Complexity: O(n), Space Complexity: O(n).
+....................................................
+
+SOLUTION 2: (USING BST)
+
+class Solution {
+public:
+    vector<int>vec;
+    
+     void inorder(TreeNode* node)
+    {
+        if(!node)
+            return;
+        inorder(node -> left);
+        vec.push_back(node -> val);
+        inorder(node -> right);
+    }
+ 
+    bool findTarget(TreeNode* root, int k) {
+         if(!root)
+            return false;
+        inorder(root);
+        int i = 0, j = vec.size()-1;
+        while(i < j)
+        {
+            int sum = vec[i]+vec[j];
+            if(sum == k)
+                return true;
+            else if(sum < k)
+                i++;
+            else
+                j--;
+        }
+        return false;
+    }
+};
+
+Time Complexity: O(n), Space Complexity: O(n).
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  4Sum
+
+Example:
+Given array nums = [1, 0, -1, 0, -2, 2], and target = 0.
+A solution set is:
+[
+  [-1,  0, 0, 1],
+  [-2, -1, 1, 2],
+  [-2,  0, 0, 2]
+]
+
+Note:
+The solution set must not contain duplicate quadruplets.
+----------------------------------------------------------
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>>res;
+        sort(nums.begin(),nums.end());
+        int n=nums.size();
+        
+        for(int i=0;i<n-3;i++)
+        {
+            if(i>0 && nums[i]==nums[i-1])
+                continue;
+            
+            for(int j=i+1;j<n-2;j++)
+            {
+                if(j>1 && nums[j]==nums[j-1] && (j-i)>1)
+                    continue;
+                
+                int k=j+1;
+                int l=n-1;
+                
+                while(k<l)
+              {
+                if(nums[i]+nums[j]+nums[k]+nums[l]==target)
+                {
+                    res.push_back({nums[i],nums[j],nums[k],nums[l]});
+                    while(k+1<l-1 && nums[k]==nums[k+1] && nums[l-1]==nums[l])
+                        k++,l--;
+                    
+                    k++,l--;
+                }
+                else if(nums[i]+nums[j]+nums[k]+nums[l]-target>0)
+                {
+                    l--;
+                }
+                else
+                {
+                    k++;
+                }
+               }
+            }
+        }
+        return res;
+    }
+};
+
+TIME: O(n^3)
+SPACE: O(n).
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  4 sum II
+
+Example:
+Input:
+A = [ 1, 2]
+B = [-2,-1]
+C = [-1, 2]
+D = [ 0, 2]
+Output:
+2
+Explanation:
+The two tuples are:
+1. (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+2. (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+-------------------------------------------------------------
+ class Solution {
+public:
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+     unordered_map<int,int>m;
+        
+        for(auto a: A)
+        {
+            for(auto b:B)
+            {
+                m[a+b]++;
+            }
+        }
+        int count=0;
+        for(auto c: C)
+        {
+            for(auto d:D)
+            {
+                count+=m[0-(c+d)];        //a+b+c+d=0 =>>>> a+b= -(c+d);
+            }
+        }
+        return count;
+        
+    }
+ };
+
+TIME: O(n^2)
+SPACE: O(n^2)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Longest Consecutive Sequence
+
+Example:
+Input: [100, 4, 200, 1, 3, 2]
+Output: 4
+Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+----------------------------------------------------------------------------------------------------------
+
+SOLUTION 1: (SORTING)
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        
+        if(!nums.size()) return 0;
+        sort(nums.begin(),nums.end());
+        int n=nums.size(),c=1;
+        int mx=INT_MIN;
+        for(int i=1;i<n;i++)
+        {
+          if(nums[i]!=nums[i-1])
+          {
+            if(nums[i-1]+1==nums[i])
+                c++;
+            else
+                mx=max(mx,c),c=1;
+           }
+        }
+        return max(mx,c);
+        
+    }
+};
+
+TIME: O(nlogn)
+SPACE: O(1)
+...............................................
+
+SOLUTION 2:  (SET)
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+       if(nums.size()==0)return 0;
+        
+        set<int>s;
+        for(int x:nums)
+            s.insert(x);
+        
+        int mx=0,cn=0,c=0;
+        for(int x: s)
+        {
+            if(!s.count(x-1))
+            {
+              cn=x;
+              c=1;
+                
+              while(s.count(cn+1))
+              {
+                  cn++;
+                  c++;
+              }
+                mx=max(mx,c);
+            }
+        }
+        return max(mx,c);
+    }
+};
+
+Time complexity: O(n).
+Only one traversal is needed and the time complexity is O(n) under the assumption that hash insert and search take O(1) time.
+Auxiliary space : O(n).
+To store every element in hashmap O(n) space is needed.
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Reverse a LinkedList   (RECURSIVE AND ITERATIVE APPROACH)
 
 Input: 1->2->3->4->5->NULL
@@ -1371,11 +2696,13 @@ public:
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  Add Two Numbers
+  Add Two Numbers as linked list
 
   Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
 Output: 7 -> 0 -> 8
 Explanation: 342 + 465 = 807.
+
+NOTE: You may assume the two numbers do not contain any leading zero, except the number 0 itself.
 --------------------------------------------------
 
   
@@ -1423,10 +2750,56 @@ public:
 };
 
 time and space : O(max(m,n)).
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Add Two Numbers as linked list II
+
+Follow up:
+What if you cannot modify the input lists? In other words, reversing the lists is not allowed.
+Example:
+Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 8 -> 0 -> 7
+--------------------------------------------------------------------
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        int n1 = 0, n2 = 0, carry = 0;
+        ListNode *curr1 = l1, *curr2 = l2, *res = NULL;
+        while( curr1 ){ curr1=curr1->next; n1++; }
+        while( curr2 ){ curr2=curr2->next; n2++; } 
+        curr1 = l1; curr2 = l2;
+        while( n1 > 0 && n2 > 0){
+            int sum = 0;
+            if( n1 >= n2 ){ sum += curr1->val; curr1=curr1->next; n1--;}
+            if( n2 > n1 ){ sum += curr2->val; curr2=curr2->next; n2--;}
+            res = addToFront( sum, res );
+        }
+        curr1 = res; res = NULL;
+        while( curr1 ){
+            curr1->val += carry; carry = curr1->val/10;
+            res = addToFront( curr1->val%10, res );
+            curr2 = curr1; 
+            curr1 = curr1->next;
+            delete curr2;
+        }
+        if( carry ) res = addToFront( 1, res );
+        return res;
+    }
+    ListNode* addToFront( int val, ListNode* head ){
+        ListNode* temp = new ListNode(val);
+        temp->next = head;
+        return temp;
+ 
+    }
+};
+
+TIME: O(n)
+SPACE: O(1)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Find intersection point of Y LinkedList 
-
 
 Input: intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5], skipA = 2, skipB = 3
 Output: Reference of the node with value = 8
@@ -1682,6 +3055,9 @@ public:
       return s;
     }
 };
+
+TIME: O(N)
+SPACE: O(1)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    Remove Linked List Elements
@@ -1702,8 +3078,238 @@ public:
         return head;
     }
 };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Remove Element
+
+Example 1:
+Given nums = [3,2,2,3], val = 3,
+Your function should return length = 2, with the first two elements of nums being 2.
+It doesn't matter what you leave beyond the returned length.
+
+Example 2:
+Given nums = [0,1,2,2,3,0,4,2], val = 2,
+Your function should return length = 5, with the first five elements of nums containing 0, 1, 3, 0, and 4.
+----------------------------------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    int removeElement(vector<int>& a, int x) {
+        int j=0;
+      for(int i=0;i<a.size();i++)
+      {
+           if(a[i]==x)continue;
+           a[j++]=a[i];
+      }
+      return j;
+    }
+};
+
+TIME: O(N)
+SPACE: O(1)
+........................................
+
+ANOTHER APPROACH: (YE ZADA BHADIYA HAI)
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+         int i = 0;
+    int n = nums.size();
+    while (i < n) 
+    {
+        if (nums[i] == val)
+        {
+            nums[i] = nums[n - 1];
+            n--;
+        } 
+        else
+        {
+            i++;
+        }
+    }
+    return n;
+    }
+};
+
+TIME: O(N)
+SPACE: O(1)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+Detect and Remove Loop in a Linked List (gfg)
+
+----------------------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+struct Node { 
+	int key; 
+	struct Node* next; 
+}; 
+
+Node* newNode(int key) 
+{ 
+	Node* temp = new Node; 
+	temp->key = key; 
+	temp->next = NULL; 
+	return temp; 
+} 
+
+void printList(Node* head) 
+{ 
+	while (head != NULL) { 
+		cout << head->key << " "; 
+		head = head->next; 
+	} 
+	cout << endl; 
+} 
+
+void detectAndRemoveLoop(Node* head) 
+{ 
+	if (head == NULL || head->next == NULL) 
+		return; 
+
+	Node *slow = head, *fast = head; 
+
+	slow = slow->next; 
+	fast = fast->next->next; 
+
+	while (fast && fast->next) 
+	{ 
+		if (slow == fast) 
+			break; 
+		slow = slow->next; 
+		fast = fast->next->next; 
+	} 
+
+	if (slow == fast) { 
+		slow = head; 
+		while (slow->next != fast->next) { 
+			slow = slow->next; 
+			fast = fast->next; 
+		} 
+
+		fast->next = NULL; 
+	} 
+} 
+
+int main() 
+{ 
+	Node* head = newNode(50); 
+	head->next = head; 
+	head->next = newNode(20); 
+	head->next->next = newNode(15); 
+	head->next->next->next = newNode(4); 
+	head->next->next->next->next = newNode(10); 
+	
+	head->next->next->next->next->next = head->next->next; 
+
+	detectAndRemoveLoop(head); 
+
+	printf("Linked List after removing loop \n"); 
+	printList(head); 
+
+	return 0; 
+} 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Flattening a Linked List
+      OR
+ Flatten a Multilevel Doubly Linked List
+
+
+Example 1:
+Input: head = [1,2,3,4,5,6,null,null,null,7,8,9,10,null,null,11,12]
+Output: [1,2,3,7,8,11,12,9,10,4,5,6]
+Explanation:
+After flattening the multilevel linked list it becomes:
+
+
+Example 2:
+
+Input: head = [1,2,null,3]
+Output: [1,3,2]
+Explanation:
+
+The input multilevel linked list is as follows:
+
+  1---2---NULL
+  |
+  3---NULL
+Example 3:
+
+Input: head = []
+Output: []
+
+---------------------------------------
+class Solution 
+{
+public:
+
+Node* flatten(Node* root)
+{
+    for (Node* h = head; h; h = h->next)
+	{
+		if (h->child)
+		{
+			Node* next = h->next;
+			h->next = h->child;
+			h->next->prev = h;
+			h->child = NULL;
+			Node* p = h->next;
+			while (p->next) p = p->next;
+			p->next = next;
+			if (next) next->prev = p;
+		}
+	}
+	return head;
+    }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Clone a linked list with next and random pointer in O(1) space
+
+Input: head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+Output: [[7,null],[13,0],[11,4],[10,2],[1,0]]
+--------------------------------------------------------
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (!head)return nullptr;
+        Node* curr = head, *temp;
+
+        while (curr)
+        {
+            temp = curr->next;
+            curr->next = new Node(curr->val);
+            curr->next->next = temp;
+            curr = temp;
+        }
+        curr = head;
+        while (curr)
+        {
+            if (curr->next)
+                curr->next->random = curr->random ? curr->random->next : curr->random;
+            curr = curr->next ? curr->next->next : curr->next;
+        }
+        Node* original = head, *copy = head->next;
+        temp = copy;
+        while (original && copy)
+        {
+            original->next =
+                original->next ? original->next->next : original->next;
+            copy->next = copy->next ? copy->next->next : copy->next;
+            original = original->next;
+            copy = copy->next;
+        }
+        return temp;
+    }
+};
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   3Sum
   
 Given array nums = [-1, 0, 1, 2, -1, -4],
@@ -1751,34 +3357,9 @@ public:
         return result;
     }
 };
-.......................................
 
-   ALTERNATE SOLUTION (LEETCODE PAR NHI CHALA BUT INTERVIEWBIT PAR CHAL GYA)
+TIME: O(n^2)
 
-  vector<vector<int>> result;
-        if(A.size()<=2)return result;
-        sort(A.begin(), A.end());
-        for (int i = 0; i < A.size() - 2; i++) {
-            long int a = A[i];
-            if(a > 0) break;
-            if (i > 0 && a == A[i - 1]) continue;
-            for (long j = i + 1, k = A.size() - 1; j < k;) {
-               long  int b = A[j];
-                long int c = A[k];
-                long int value = a + b + c;
-                if (value == 0)
-                {
-                    result.push_back({a, b, c});
-                    while (j<k && b == A[++j]);
-                    while (j < k &&c == A[--k]);
-                } else if (value > 0) {
-                    k--;
-                } else {
-                    j++;
-                }
-            }
-        }
-        return result;
 /////////////////////////////////////////////////////////////////////////////////////
 
 Remove Duplicates from Sorted Array
@@ -2284,7 +3865,7 @@ public:
 
  Single Element in a Sorted Array(LEETCODE)
       OR
-  Find the element that appears once in sorted array, and rest element appears twice
+  Find the element that appears once in sorted array, and rest element appears twice (binary search)
 
 Example 1:
 Input: nums = [1,1,2,3,3,4,4,8,8]
@@ -2441,8 +4022,197 @@ Can you do it in O(logk) time?
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+K-th Element of Two Sorted Arrays
+
+Examples:
+
+Input : Array 1 - 2 3 6 7 9
+        Array 2 - 1 4 8 10
+        k = 5
+Output : 6
+Explanation: The final sorted array would be -
+1, 2, 3, 4, 6, 7, 8, 9, 10
+The 5th element of this array is 6.
+Input : Array 1 - 100 112 256 349 770
+        Array 2 - 72 86 113 119 265 445 892
+        k = 7
+Output : 256
+Explanation: Final sorted array is -
+72, 86, 100, 112, 113, 119, 256, 265, 349, 445, 770, 892
+7th element of this array is 256.
+----------------------------------------------------------------------
+
+Basic Approach
+
+#include <iostream> 
+using namespace std; 
+
+int kth(int arr1[], int arr2[], int m, int n, int k) 
+{ 
+	int sorted1[m + n]; 
+	int i = 0, j = 0, d = 0; 
+	while (i < m && j < n) 
+	{ 
+		if (arr1[i] < arr2[j]) 
+			sorted1[d++] = arr1[i++]; 
+		else
+			sorted1[d++] = arr2[j++]; 
+	} 
+	while (i < m) 
+		sorted1[d++] = arr1[i++]; 
+	while (j < n) 
+		sorted1[d++] = arr2[j++]; 
+	return sorted1[k - 1]; 
+} 
+
+int main() 
+{ 
+	int arr1[5] = {2, 3, 6, 7, 9}; 
+	int arr2[4] = {1, 4, 8, 10}; 
+	int k = 5; 
+	cout << kth(arr1, arr2, 5, 4, k); 
+	return 0; 
+} 
+
+OUTPUT:6
+
+TIME: O(n)
+SPACE:O(m+n).
+...................................
+
+SOLUTION 2: (SPACE OPTIMISED)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int find(int A[], int B[], int m,
+         int n, int k_req)
+{
+	int k = 0, i = 0, j = 0;
+
+	// Keep taking smaller of the current
+	// elements of two sorted arrays and
+	// keep incrementing k
+	while (i < m && j < n)
+	{
+		if (A[i] < B[j])
+		{
+			k++;
+			if (k == k_req)
+				return A[i];
+			i++;
+		}
+		else
+		{
+			k++;
+			if (k == k_req)
+				return B[j];
+			j++;
+		}
+	}
+
+	// If array B[] is completely traversed
+	while (i < m)
+	{
+		k++;
+		if (k == k_req)
+			return A[i];
+		i++;
+	}
+
+	// If array A[] is completely traversed
+	while (j < n)
+	{
+		k++;
+		if (k == k_req)
+			return B[j];
+		j++;
+	}
+}
+int main()
+{
+	int A[5] = { 2, 3, 6, 7, 9 };
+	int B[4] = { 1, 4, 8, 10 };
+	int k = 5;
+
+	cout << find(A, B, 5, 4, k);
+
+	return 0;
+}
+Output:
+6
+Time Complexity : O(k)
+Auxiliary Space : O(1)
+.....................................
+
+SOLUTION 3: (more optimised (using D & C))
+
+#include <iostream> 
+using namespace std; 
+
+int kth(int arr1[], int arr2[], int m, int n, int k, 
+						int st1 = 0, int st2 = 0) 
+{ 
+	if (st1 == m) 
+		return arr2[st2 + k - 1]; 
+
+	if (st2 == n) 
+		return arr1[st1 + k - 1]; 
+
+	if (k == 0 || k > (m - st1) + (n - st2)) 
+		return -1; 
+
+	if (k == 1) 
+		return (arr1[st1] < arr2[st2]) ? 
+			arr1[st1] : arr2[st2]; 
+	int curr = k / 2; 
+
+	if (curr - 1 >= m - st1) 
+	{ 
+		if (arr1[m - 1] < arr2[st2 + curr - 1]) 
+			return arr2[st2 + (k - (m - st1) - 1)]; 
+		else
+			return kth(arr1, arr2, m, n, k - curr, 
+				st1, st2 + curr); 
+	} 
+
+    if (curr-1 >= n-st2) 
+	{ 
+		if (arr2[n - 1] < arr1[st1 + curr - 1]) 
+			return arr1[st1 + (k - (n - st2) - 1)]; 
+		else
+			return kth(arr1, arr2, m, n, k - curr, 
+				st1 + curr, st2); 
+	} 
+	else
+	{ 
+    	if (arr1[curr + st1 - 1] < arr2[curr + st2 - 1]) 
+			return kth(arr1, arr2, m, n, k - curr, 
+				st1 + curr, st2); 
+		else
+			return kth(arr1, arr2, m, n, k - curr, 
+				st1, st2 + curr); 
+	} 
+} 
+
+int main() 
+{ 
+	int arr1[5] = {2, 3, 6, 7, 9}; 
+	int arr2[4] = {1, 4, 8, 10}; 
+
+	int k = 5; 
+	cout << kth(arr1, arr2, 5, 4, k); 
+	return 0; 
+} 
+
+Output:
+6
+Time Complexity: O(log k)
+Now, k can take a maximum value of m + n. This means that log k can be in the worst case, log(m + n). Logm + logn = log(mn) by properties of logarithms, and when m, n > 2, log(m + n) < log(mn).Thus this algorithm slightly outperforms the previous algorithm.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    Median of Two Sorted Arrays (LEETCODE)
             OR
   Media of an array     
@@ -2610,7 +4380,8 @@ We can use binary search on answer. In O(N log M), we can count how many element
 So, we use binary search on interval [1, INT_MAX]. So, total complexity is O(30 * N log M).
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  Check if a number if a power of 2 or not in O(1)      
+  Check if a number if a power of 2 or not in O(1)    
+----------------------------------------------  
 
  class Solution {
 public:
@@ -2687,9 +4458,7 @@ signed main()
 Counting Bits
 
 Given a non negative integer number num. For every numbers i in the range 0 ≤ i ≤ num calculate the number of 1's in their binary representation and return them as an array.
-
 Example 1:
-
 Input: 2
 Output: [0,1,1]
 Example 2:
@@ -2712,7 +4481,8 @@ TIME : O(N) and SPACE : O(N).
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Number of 1 Bits
-
+    OR
+Count total set bits
 
 
 Example 1:
@@ -2980,7 +4750,7 @@ int main()
 
 	return 0;
 }
-
+..................................................
 ALTERNATE SOLUTION : (USING BITMASKING)
 
   #include <iostream>
@@ -3851,8 +5621,799 @@ int main()
 }
 
 TIME : O(N)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Largest Rectangle in Histogram
+
+Example:
+Input: [2,1,5,6,2,3]
+Output: 10
+------------------------------------------------------------------------------
+
+ SOLUTION 1: (BRUTE FORCE)
+  TIME:O(n)
+.......................
+
+
+SOLUTION 2: (using STACK)
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        if(heights.size()==0) return 0;
+        if(heights.size()==1) return heights[0];
+        
+        int mx=0;
+        stack<int>s;
+        s.push(0);
+        for(int i=1;i<heights.size();i++)
+        {
+            int curr=heights[i];
+            if(curr>=heights[s.top()])
+            {
+                s.push(i);
+            }
+            else
+            {
+              while(!s.empty() && curr<heights[s.top()])
+              {
+                  int temp=heights[s.top()];
+                  s.pop();
+                  if(s.empty())
+                  {
+                      mx=max(mx,temp*i);
+                  }
+                  else
+                  {
+                      mx=max(mx,temp*(i-s.top()-1));
+                  }
+              }
+                s.push(i);
+            }
+        }
+        if(!s.empty())
+        {
+            int i=heights.size();
+            while(!s.empty())
+            {
+                int temp=heights[s.top()];
+                s.pop();
+                if(s.empty())
+                  mx=max(mx,temp*i);
+                else
+                  mx=max(mx,temp*(i-s.top()-1));
+            }
+        }
+        return mx;
+    }
+};
+
+TIME:O(n)
+SPACE: O(n)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Maximal Rectangle
+
+ Example:
+
+Input:
+[
+  ["1","0","1","0","0"],
+  ["1","0","1","1","1"],
+  ["1","1","1","1","1"],
+  ["1","0","0","1","0"]
+]
+Output: 6
+--------------------------------------------------------------------------------------
+  class Solution {
+    
+    int largestRectangleArea(vector<int>& heights) {
+        if(heights.size()==0) return 0;
+        if(heights.size()==1) return heights[0];
+        
+        int mx=0;
+        stack<int>s;
+        s.push(0);
+        for(int i=1;i<heights.size();i++)
+        {
+            int curr=heights[i];
+            if(curr>=heights[s.top()])
+            {
+                s.push(i);
+            }
+            else
+            {
+              while(!s.empty() && curr<heights[s.top()])
+              {
+                  int temp=heights[s.top()];
+                  s.pop();
+                  if(s.empty())
+                  {
+                      mx=max(mx,temp*i);
+                  }
+                  else
+                  {
+                      mx=max(mx,temp*(i-s.top()-1));
+                  }
+              }
+                s.push(i);
+            }
+        }
+        if(!s.empty())
+        {
+            int i=heights.size();
+            while(!s.empty())
+            {
+                int temp=heights[s.top()];
+                s.pop();
+                if(s.empty())
+                  mx=max(mx,temp*i);
+                else
+                  mx=max(mx,temp*(i-s.top()-1));
+            }
+        }
+        return mx;
+    }
+    
+    
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+     
+        if(matrix.size()==0)return 0;
+        
+        int mx=0;
+        vector<int>v(matrix[0].size());
+        for(int i=0;i<matrix.size();i++)
+        {
+            for(int j=0;j<matrix[0].size();j++)
+            {
+                if(matrix[i][j]=='0')
+                    v[j]=0;
+                else
+                    v[j]+=1;
+            }
+            mx=max(mx,largestRectangleArea(v));
+        }
+        return mx;
+    }
+    
+};
+
+TIME:O(n*m), where n and m are rows and coloumns respectively.
+SPACE: O(m), where m is number of coloumns.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Maximal Square (LEETCODE)
+
+ Example:
+Input: 
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+Output: 4
+-----------------------------------------------------------
+
+  SOLUTION 1: (USING BRUTE FORCE)
+
+  class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        int rows=matrix.size();
+        int cols=0;
+        
+        if(rows>0)
+        {
+            cols=matrix[0].size();
+        }        
+        int mx = 0;
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                if (matrix[i][j] == '1') 
+                {
+                    int sqlen = 1;
+                    bool flag = true;
+                    while (sqlen + i < rows && sqlen + j < cols && flag)
+                    {
+                        for (int k = j; k <= sqlen + j; k++)
+                        {
+                            if (matrix[i + sqlen][k] == '0') 
+                            {
+                                flag = false;
+                                break;
+                            }
+                        }
+                        for (int k = i; k <= sqlen + i; k++) 
+                        {
+                            if (matrix[k][j + sqlen] == '0') 
+                            {
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if (flag)
+                            sqlen++;
+                    }
+                    if (mx < sqlen) 
+                    {
+                        mx = sqlen;
+                    }
+                }
+            }
+        }
+        return mx * mx;
+    }
+};
+
+Time complexity : O((mn)^2).In worst case, we need to traverse the complete matrix for every 1.
+Space complexity : O(1). No extra space is used.
+
+......................................................
+
+  SOLUTION 2: (USING DYNAMMIC PROGRAMMING)
+
+   class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        int row=matrix.size();
+        int col=0;
+        
+        if(row>0)
+        {
+            col=matrix[0].size();
+        }
+        
+        vector<vector<int>>dp(row+1, vector<int>(col+1));
+        
+        int mx=0;
+        
+        for(int i=1;i<=row;i++)
+        {
+            for(int j=1;j<=col;j++)
+            {
+              if(matrix[i-1][j-1]=='1')    
+              {
+                 dp[i][j]=min({ dp[i][j-1], dp[i-1][j], dp[i-1][j-1] }) + 1;
+                 mx=max(mx,dp[i][j]);
+              }
+          }
+        }
+      return mx*mx;
+    }
+};
+
+Time complexity : O(mn). Single pass.
+Space complexity : O(mn). Another matrix of same size is used for dp.
+...................................................................
+
+ SOLUTION 3: (MORE OPTIMISED DYNAMMIC PROGRAMMING)
+
+  class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        int row=matrix.size();
+        int col=0;
+        
+        if(row>0)
+        {
+            col=matrix[0].size();
+        }
+        
+        vector<int>dp(col+1);
+        
+        int mx=0,prev=0;
+        
+        for(int i=1;i<=row;i++)
+        {
+            for(int j=1;j<=col;j++)
+            {
+                int temp=dp[j];
+              if(matrix[i-1][j-1]=='1')    
+              {
+                    dp[j]=min({ dp[j-1], prev, dp[j] }) + 1;
+                 mx=max(mx,dp[j]);
+              }
+            else
+              {
+                dp[j]=0;
+              }
+            prev=temp;
+          }
+        }
+      return mx*mx;
+    }
+};
+
+Complexity Analysis
+Time complexity : O(mn). Single pass.
+Space complexity : O(n). Another array which stores elements in a row is used for dp.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Sliding Window Maximum (Maximum of all subarrays of size k)
+
+ Examples :
+
+Input: arr[] = {1, 2, 3, 1, 4, 5, 2, 3, 6}, K = 3 
+Output: 3 3 4 5 5 5 6
+Explanation: 
+Maximum of 1, 2, 3 is 3
+Maximum of 2, 3, 1 is 3
+Maximum of 3, 1, 4 is 4
+Maximum of 1, 4, 5 is 5
+Maximum of 4, 5, 2 is 5 
+Maximum of 5, 2, 3 is 5
+Maximum of 2, 3, 6 is 6
+
+Input: arr[] = {8, 5, 10, 7, 9, 4, 15, 12, 90, 13}, K = 4 
+Output: 10 10 10 15 15 90 90
+Explanation:
+Maximum of first 4 elements is 10, similarly for next 4 
+elements (i.e from index 1 to 4) is 10, So the sequence 
+generated is 10 10 10 15 15 90 90
+-----------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Min Stack
+
+ Example 1:
+Input
+["MinStack","push","push","push","getMin","pop","top","getMin"]
+[[],[-2],[0],[-3],[],[],[],[]]
+
+Output
+[null,null,null,null,-3,null,0,-2]
+
+Explanation
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin(); // return -3
+minStack.pop();
+minStack.top();    // return 0
+minStack.getMin(); // return -2
+------------------------------------------------------
+ 
+SOLUTION 1: (LEETCODE WAALA SOLUTION CLASS WAALE TAREEKE SE)
+
+class MinStack {
+public:
+    
+    stack<int> s1, s2;
+
+    MinStack() {
+         stack<int> t1, t2;
+    s1 = t1;
+    s2 = t2;
+    }
+    
+    void push(int x) {
+         s1.push(x);
+    if (s2.empty()) s2.push(x);
+    else {
+        if (s2.top() >= x) s2.push(x);
+        else s2.push(s2.top());
+    }
+    }
+    
+    void pop() {
+         if (!s1.empty()){
+        int val = s1.top();
+        s1.pop();
+        s2.pop();
+    }
+    }
+    
+    int top() {
+         if (!s1.empty()) return s1.top();
+         else return -1;
+    }
+    
+    int getMin() {
+          if (!s2.empty()) return s2.top();
+    else return -1;
+    }
+};
+
+pop() becomes a little trickier in such a case.
+You only pop() from the min stack if the top() of min stack is same as the current minimum.
+Space complexity : O(N + X) where X = number of places where minimum changes or the element is same as the minimum.
+.........................................................................
+
+SOLUTION 2: (GFG SE POORA CODE STARTING SE)
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+struct MyStack 
+{ 
+	stack<int> s; 
+	int minEle; 
+
+	void getMin() 
+	{ 
+		if (s.empty()) 
+			cout << "Stack is empty\n"; 
+
+		else
+			cout <<"Minimum Element in the stack is: "
+				<< minEle << "\n"; 
+	} 
+
+	void peek() 
+	{ 
+		if (s.empty()) 
+		{ 
+			cout << "Stack is empty "; 
+			return; 
+		} 
+
+		int t = s.top(); // Top element. 
+
+		cout << "Top Most Element is: "; 
+
+		(t < minEle)? cout << minEle: cout << t; 
+	} 
+
+	void pop() 
+	{ 
+		if (s.empty()) 
+		{ 
+			cout << "Stack is empty\n"; 
+			return; 
+		} 
+
+		cout << "Top Most Element Removed: "; 
+		int t = s.top(); 
+		s.pop(); 
+
+		if (t < minEle) 
+		{ 
+			cout << minEle << "\n"; 
+			minEle = 2*minEle - t; 
+		} 
+
+		else
+			cout << t << "\n"; 
+	} 
+
+	void push(int x) 
+	{ 
+		if (s.empty()) 
+		{ 
+			minEle = x; 
+			s.push(x); 
+			cout << "Number Inserted: " << x << "\n"; 
+			return; 
+		} 
+
+		// If new number is less than minEle 
+		if (x < minEle) 
+		{ 
+			s.push(2*x - minEle); 
+			minEle = x; 
+		} 
+
+		else
+		s.push(x); 
+
+		cout << "Number Inserted: " << x << "\n"; 
+	} 
+}; 
+
+int main() 
+{ 
+	MyStack s; 
+	s.push(3); 
+	s.push(5); 
+	s.getMin(); 
+	s.push(2); 
+	s.push(1); 
+	s.getMin(); 
+	s.pop(); 
+	s.getMin(); 
+	s.pop(); 
+	s.peek(); 
+
+	return 0; 
+} 
+
+
+Output:
+Number Inserted: 3
+Number Inserted: 5
+Minimum Element in the stack is: 3
+Number Inserted: 2
+Number Inserted: 1
+Minimum Element in the stack is: 1
+Top Most Element Removed: 1
+Minimum Element in the stack is: 2
+Top Most Element Removed: 2
+Top Most Element is: 5
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Max Stack    (JAVA mai hai)
+
+ Example 1:
+MaxStack stack = new MaxStack();
+stack.push(5); 
+stack.push(1);
+stack.push(5);
+stack.top(); -> 5
+stack.popMax(); -> 5
+stack.top(); -> 1
+stack.peekMax(); -> 5
+stack.pop(); -> 1
+stack.top(); -> 5
+----------------------------------------------
+
+Approach #1: Two Stacks 
+
+class MaxStack {
+    Stack<Integer> stack;
+    Stack<Integer> maxStack;
+
+    public MaxStack() {
+        stack = new Stack();
+        maxStack = new Stack();
+    }
+
+    public void push(int x) {
+        int max = maxStack.isEmpty() ? x : maxStack.peek();
+        maxStack.push(max > x ? max : x);
+        stack.push(x);
+    }
+
+    public int pop() {
+        maxStack.pop();
+        return stack.pop();
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int peekMax() {
+        return maxStack.peek();
+    }
+
+    public int popMax() {
+        int max = peekMax();
+        Stack<Integer> buffer = new Stack();
+        while (top() != max) buffer.push(pop());
+        pop();
+        while (!buffer.isEmpty()) push(buffer.pop());
+        return max;
+    }
+}
+
+  Complexity Analysis
+Time Complexity: O(N) for the popMax operation, and O(1) for the other operations, where N is the number of operations performed.
+Space Complexity: O(N), the maximum size of the stack.
+........................................................................
+
+Approach #2: Double Linked List + TreeMap 
+
+class MaxStack {
+    TreeMap<Integer, List<Node>> map;
+    DoubleLinkedList dll;
+
+    public MaxStack() {
+        map = new TreeMap();
+        dll = new DoubleLinkedList();
+    }
+
+    public void push(int x) {
+        Node node = dll.add(x);
+        if(!map.containsKey(x))
+            map.put(x, new ArrayList<Node>());
+        map.get(x).add(node);
+    }
+
+    public int pop() {
+        int val = dll.pop();
+        List<Node> L = map.get(val);
+        L.remove(L.size() - 1);
+        if (L.isEmpty()) map.remove(val);
+        return val;
+    }
+
+    public int top() {
+        return dll.peek();
+    }
+
+    public int peekMax() {
+        return map.lastKey();
+    }
+
+    public int popMax() {
+        int max = peekMax();
+        List<Node> L = map.get(max);
+        Node node = L.remove(L.size() - 1);
+        dll.unlink(node);
+        if (L.isEmpty()) map.remove(max);
+        return max;
+    }
+}
+
+class DoubleLinkedList {
+    Node head, tail;
+
+    public DoubleLinkedList() {
+        head = new Node(0);
+        tail = new Node(0);
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    public Node add(int val) {
+        Node x = new Node(val);
+        x.next = tail;
+        x.prev = tail.prev;
+        tail.prev = tail.prev.next = x;
+        return x;
+    }
+
+    public int pop() {
+        return unlink(tail.prev).val;
+    }
+
+    public int peek() {
+        return tail.prev.val;
+    }
+
+    public Node unlink(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        return node;
+    }
+}
+
+class Node {
+    int val;
+    Node prev, next;
+    public Node(int v) {val = v;}
+}
+
+Complexity Analysis
+Time Complexity: O(logN) for all operations except peek which is O(1), where N is the number of operations performed. Most operations involving TreeMap are O(logN).
+Space Complexity: O(N), the size of the data structures used.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Find maximum in a stack in O(1) time and O(1) extra space  (GFG)
+
+Examples:
+Given Stack :
+2
+5
+1
+64   --> Maximum
+So Output must be 64 when getMax() is called.
+----------------------------------------------------
+
+// C++ program to implement a stack that supports 
+// getMaximum() in O(1) time and O(1) extra space. 
+#include <bits/stdc++.h> 
+using namespace std; 
+
+// A user defined stack that supports getMax() in 
+// addition to push() and pop() 
+struct MyStack { 
+	stack<int> s; 
+	int maxEle; 
+
+	// Prints maximum element of MyStack 
+	void getMax() 
+	{ 
+		if (s.empty()) 
+			cout << "Stack is empty\n"; 
+
+		// variable maxEle stores the maximum element 
+		// in the stack. 
+		else
+			cout << "Maximum Element in the stack is: "
+				<< maxEle << "\n"; 
+	} 
+
+	// Prints top element of MyStack 
+	void peek() 
+	{ 
+		if (s.empty()) { 
+			cout << "Stack is empty "; 
+			return; 
+		} 
+
+		int t = s.top(); // Top element. 
+
+		cout << "Top Most Element is: "; 
+
+		// If t < maxEle means maxEle stores 
+		// value of t. 
+		(t > maxEle) ? cout << maxEle : cout << t; 
+	} 
+
+	// Remove the top element from MyStack 
+	void pop() 
+	{ 
+		if (s.empty()) { 
+			cout << "Stack is empty\n"; 
+			return; 
+		} 
+
+		cout << "Top Most Element Removed: "; 
+		int t = s.top(); 
+		s.pop(); 
+
+		// Maximum will change as the maximum element 
+		// of the stack is being removed. 
+		if (t > maxEle) { 
+			cout << maxEle << "\n"; 
+			maxEle = 2 * maxEle - t; 
+		} 
+
+		else
+			cout << t << "\n"; 
+	} 
+
+	// Removes top element from MyStack 
+	void push(int x) 
+	{ 
+		// Insert new number into the stack 
+		if (s.empty()) { 
+			maxEle = x; 
+			s.push(x); 
+			cout << "Number Inserted: " << x << "\n"; 
+			return; 
+		} 
+
+		// If new number is less than maxEle 
+		if (x > maxEle) { 
+			s.push(2 * x - maxEle); 
+			maxEle = x; 
+		} 
+
+		else
+			s.push(x); 
+
+		cout << "Number Inserted: " << x << "\n"; 
+	} 
+}; 
+
+// Driver Code 
+int main() 
+{ 
+	MyStack s; 
+	s.push(3); 
+	s.push(5); 
+	s.getMax(); 
+	s.push(7); 
+	s.push(19); 
+	s.getMax(); 
+	s.pop(); 
+	s.getMax(); 
+	s.pop(); 
+	s.peek(); 
+
+	return 0; 
+} 
+
+Output:
+Number Inserted: 3
+Number Inserted: 5
+Maximum Element in the stack is: 5
+Number Inserted: 7
+Number Inserted: 19
+Maximum Element in the stack is: 19
+Top Most Element Removed: 19
+Maximum Element in the stack is: 7
+Top Most Element Removed: 7
+Top Most Element is: 5
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Reverse Words in a String
 
@@ -3974,7 +6535,7 @@ public:
         int l1=expandFromMiddle(s, i, i);
         int l2=expandFromMiddle(s, i, i+1);
         int l=max(l1,l2);
-        if(l>end-start)
+        if(l>end-start)klbjabbbdjndn n  c jvbvbvj  b cb fc n jzakav bxknkc jhbx  z j cn lwjewhjujsbc,frebhj bvl;akjsfdd,.ss cnvmkm /,.nznk 
         {
           start=i-(l-1)/2;
           end=i+(l/2);
@@ -3987,7 +6548,7 @@ public:
 
 Time complexity : O(n^2).Since expanding a palindrome around its center could take O(n) time, the overall complexity is O(n^2).
 Space complexity : O(1)
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 REVERSE INTEGER
 
@@ -4027,6 +6588,1977 @@ public:
 
 Time Complexity: O(log(x)). There are roughly log(base10)(x) digits in x.
 Space Complexity: O(1).
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Inorder Traversal
+
+Example:
+
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [1,3,2]
+
+----------------------------------------------------------
+ ITERATIVE SOLUTION:   
+
+ void printIn(TreeNode* root, vector<int>&v)
+{
+  if(root==NULL)return ;
+
+  stack<TreeNode*>mystack;
+
+  TreeNode* ptr=root;
+  while(ptr!=NULL || !mystack.empty())
+  {
+    while(ptr!=NULL)
+    {
+      mystack.push(ptr);
+      ptr=ptr->left;
+    }
+     
+    ptr=mystack.top();
+    mystack.pop();
+    v.push_back(ptr->val);
+
+    ptr=ptr->right;
+
+  }
+}
+
+class Solution { 
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+      vector<int>v;
+      printIn(root,v);
+      return v;
+    }
+};
+
+Time complexity : O(n)
+Space complexity :O(n)
+.................................................................
+
+RECURSIVE SOLUTION:
+
+void printIn(TreeNode* root, vector<int>&v)
+{
+    if(root==NULL)
+        return ;
+
+    printIn(root->left,v);
+    v.push_back(root->val);
+    printIn(root->right,v);
+}
+  
+
+class Solution { 
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+      vector<int>v;
+      printIn(root,v);
+      return v;
+    }
+};
+
+Time complexity : O(n)
+Space complexity :O(n)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   Binary Tree Preorder Traversal
+
+  Example:
+
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [1,2,3]
+------------------------------------------------
+
+  RECURSIVE SOLUTION: 
+
+void printPre(TreeNode* root, vector<int>&v)
+{
+  if(!root)return ;
+  
+  v.push_back(root->val);
+  printPre(root->left,v);
+  printPre(root->right,v);
+}
+
+
+
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int>v;
+        printPre(root,v);
+      return v;
+    }
+};
+
+Time complexity : O(n)
+Space complexity :O(n)
+.........................................................................
+
+ ITERATIVE SOLUTION:
+
+void printPre(TreeNode* root, vector<int>&v)
+{
+  if(root==NULL)return ;
+
+  stack<TreeNode*>mystack;
+mystack.push(root);
+     
+    while(!mystack.empty())
+    {
+        TreeNode* ptr = mystack.top();
+        mystack.pop();
+        v.push_back(ptr->val);
+
+        if(ptr->right)
+            mystack.push(ptr->right);
+
+        if(ptr->left)
+            mystack.push(ptr->left);
+  }
+}
+
+
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int>v;
+        printPre(root,v);
+      return v;
+    }
+};
+
+Time complexity : O(n)
+Space complexity :O(n)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Binary Tree Postorder Traversal
+
+Example:
+
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [3,2,1]
+------------------------------------------------
+
+ITERATIVE SOLUTION:
+
+void printPost(TreeNode* root, vector<int>&v)
+{
+  if(root==NULL)return ;
+
+  stack<TreeNode*>s1,s2;
+
+ s1.push(root);
+  while(!s1.empty())
+  {
+    root=s1.top();
+    s1.pop();
+    s2.push(root);
+    if(root->left)
+      s1.push(root->left);
+    if(root->right)
+      s1.push(root->right);
+  }
+  while(!s2.empty())
+  {
+    root=s2.top();
+    s2.pop();
+    v.push_back(root->val);
+  }
+}
+
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int>v;
+        printPost(root,v);
+      return v;
+    }
+};
+
+Time complexity : O(n)
+Space complexity :O(n)
+............................................................................
+
+ RESURSIVE SOLUTION: 
+
+ void printPost(TreeNode* root, vector<int>&v)
+{
+    if(root==NULL)
+        return ;
+ printPost(root->left,v);
+    printPost(root->right,v);
+    v.push_back(root->val);
+}
+
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int>v;
+        printPost(root,v);
+      return v;
+    }
+};
+
+Time complexity : O(n)
+Space complexity :O(n)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Find Bottom Left Tree Value
+
+  Example 1:
+Input:
+
+    2
+   / \
+  1   3
+
+Output:
+1
+Example 2:
+Input:
+
+        1
+       / \
+      2   3
+     /   / \
+    4   5   6
+       /
+      7
+
+Output:
+7
+--------------------------------------------------------
+
+ class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root)
+{
+  queue<TreeNode*>q;
+  q.push(root);
+   int x=0;
+  while(!q.empty())
+  {
+    int n=q.size();
+    for(auto i=1;i<=n;i++)
+    {
+      TreeNode* f=q.front();
+      q.pop();
+
+      if(i==1)
+      {
+        x=f->val;
+      }
+      if(f->left!=NULL)
+        q.push(f->left);
+
+      if(f->right!=NULL)
+        q.push(f->right);
+    }
+  }
+       return x;
+    }
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ LeftView Of Binary Tree
+
+Examples:
+Input : 
+                 1
+               /   \
+              2     3
+             / \     \
+            4   5     6             
+Output : 1 2 4
+Input :
+        1
+      /   \
+    2       3
+      \   
+        4  
+          \
+            5
+             \
+               6
+Output :1 2 4 5 6
+----------------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+class node { 
+public: 
+	int data; 
+	node *left, *right; 
+}; 
+
+node* newNode(int item) 
+{ 
+	node* temp = new node(); 
+	temp->data = item; 
+	temp->left = temp->right = NULL; 
+	return temp; 
+} 
+
+void leftViewUtil(node* root, int level, int* max_level) 
+{ 
+	if (root == NULL) 
+		return; 
+
+	if (*max_level < level) { 
+		cout << root->data << "\t"; 
+		*max_level = level; 
+	} 
+
+	leftViewUtil(root->left, level + 1, max_level); 
+	leftViewUtil(root->right, level + 1, max_level); 
+} 
+
+void leftView(node* root) 
+{ 
+	int max_level = 0; 
+	leftViewUtil(root, 1, &max_level); 
+} 
+
+int main() 
+{ 
+	node* root = newNode(12); 
+	root->left = newNode(10); 
+	root->right = newNode(30); 
+	root->right->left = newNode(25); 
+	root->right->right = newNode(40); 
+
+	leftView(root); 
+
+	return 0; 
+} 
+
+Time Complexity: The function does a simple traversal of the tree, so the complexity is O(n).
+Auxiliary Space: O(n), due to the stack space during recursive call.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Bottom View of a Binary Tree
+
+ 
+                      20
+                    /    \
+                  8       22
+                /   \    /   \
+              5      3 4     25
+                    / \      
+                  10    14 
+For the above tree the output should be 5, 10, 4, 14, 25.
+---------------------------------------------------------------------
+
+Method 1 – Using Queue
+
+#include<bits/stdc++.h> 
+using namespace std; 
+
+struct Node 
+{ 
+	int data; //data of the node 
+	int hd; //horizontal distance of the node 
+	Node *left, *right; //left and right references 
+
+	Node(int key) 
+	{ 
+		data = key; 
+		hd = INT_MAX; 
+		left = right = NULL; 
+	} 
+}; 
+
+void bottomView(Node *root) 
+{ 
+	if (root == NULL) 
+		return; 
+
+	// Initialize a variable 'hd' with 0 
+	// for the root element. 
+	int hd = 0; 
+
+	// TreeMap which stores key value pair 
+	// sorted on key value 
+	map<int, int> m; 
+
+	// Queue to store tree nodes in level 
+	// order traversal 
+	queue<Node *> q; 
+
+	// Assign initialized horizontal distance 
+	// value to root node and add it to the queue. 
+	root->hd = hd; 
+	q.push(root); // In STL, push() is used enqueue an item 
+
+	// Loop until the queue is empty (standard 
+	// level order loop) 
+	while (!q.empty()) 
+	{ 
+		Node *temp = q.front(); 
+		q.pop(); // In STL, pop() is used dequeue an item 
+
+		// Extract the horizontal distance value 
+		// from the dequeued tree node. 
+		hd = temp->hd; 
+
+		// Put the dequeued tree node to TreeMap 
+		// having key as horizontal distance. Every 
+		// time we find a node having same horizontal 
+		// distance we need to replace the data in 
+		// the map. 
+		m[hd] = temp->data; 
+
+		// If the dequeued node has a left child, add 
+		// it to the queue with a horizontal distance hd-1. 
+		if (temp->left != NULL) 
+		{ 
+			temp->left->hd = hd-1; 
+			q.push(temp->left); 
+		} 
+
+		// If the dequeued node has a right child, add 
+		// it to the queue with a horizontal distance 
+		// hd+1. 
+		if (temp->right != NULL) 
+		{ 
+			temp->right->hd = hd+1; 
+			q.push(temp->right); 
+		} 
+	} 
+
+	// Traverse the map elements using the iterator. 
+	for (auto i = m.begin(); i != m.end(); ++i) 
+		cout << i->second << " "; 
+} 
+
+int main() 
+{ 
+	Node *root = new Node(20); 
+	root->left = new Node(8); 
+	root->right = new Node(22); 
+	root->left->left = new Node(5); 
+	root->left->right = new Node(3); 
+	root->right->left = new Node(4); 
+	root->right->right = new Node(25); 
+	root->left->right->left = new Node(10); 
+	root->left->right->right = new Node(14); 
+	cout << "Bottom view of the given binary tree :\n"
+	bottomView(root); 
+	return 0; 
+} 
+
+Bottom view of the given binary tree:
+5 10 4 14 25
+...................................................
+
+ Method 2- Using HashMap()
+
+// C++ Program to print Bottom View of Binary Tree 
+#include < bits / stdc++.h > 
+#include < map > 
+using namespace std; 
+
+// Tree node class 
+struct Node 
+{ 
+	// data of the node 
+	int data; 
+	
+	// horizontal distance of the node 
+	int hd; 
+	
+	//left and right references 
+	Node * left, * right; 
+	
+	// Constructor of tree node 
+	Node(int key) 
+	{ 
+		data = key; 
+		hd = INT_MAX; 
+		left = right = NULL; 
+	} 
+}; 
+
+void printBottomViewUtil(Node * root, int curr, int hd, map <int, pair <int, int>> & m) 
+{ 
+	// Base case 
+	if (root == NULL) 
+		return; 
+	
+	// If node for a particular 
+	// horizontal distance is not 
+	// present, add to the map. 
+	if (m.find(hd) == m.end()) 
+	{ 
+		m[hd] = make_pair(root -> data, curr); 
+	} 
+	// Compare height for already 
+	// present node at similar horizontal 
+	// distance 
+	else
+	{ 
+		pair < int, int > p = m[hd]; 
+		if (p.second <= curr) 
+		{ 
+			m[hd].second = curr; 
+			m[hd].first = root -> data; 
+		} 
+	} 
+	
+	// Recur for left subtree 
+	printBottomViewUtil(root -> left, curr + 1, hd - 1, m); 
+	
+	// Recur for right subtree 
+	printBottomViewUtil(root -> right, curr + 1, hd + 1, m); 
+} 
+
+void printBottomView(Node * root) 
+{ 
+	
+	// Map to store Horizontal Distance, 
+	// Height and Data. 
+	map < int, pair < int, int > > m; 
+	
+	printBottomViewUtil(root, 0, 0, m); 
+	
+	// Prints the values stored by printBottomViewUtil() 
+	map < int, pair < int, int > > ::iterator it; 
+	for (it = m.begin(); it != m.end(); ++it) 
+	{ 
+		pair < int, int > p = it -> second; 
+		cout << p.first << " "; 
+	} 
+} 
+
+int main() 
+{ 
+	Node * root = new Node(20); 
+	root -> left = new Node(8); 
+	root -> right = new Node(22); 
+	root -> left -> left = new Node(5); 
+	root -> left -> right = new Node(3); 
+	root -> right -> left = new Node(4); 
+	root -> right -> right = new Node(25); 
+	root -> left -> right -> left = new Node(10); 
+	root -> left -> right -> right = new Node(14); 
+	cout << "Bottom view of the given binary tree :\n"; 
+	printBottomView(root); 
+	return 0; 
+} 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Top View of Binary Tree
+
+Input:
+       1
+     /   \
+   2       3
+  /  \    / \
+ 4    5  6   7
+Top view of the above binary tree is
+4 2 1 3 7
+
+Input:
+        1
+      /   \
+    2       3
+      \   
+        4  
+          \
+            5
+             \
+               6
+Top view of the above binary tree is
+2 1 3 6
+-------------------------------------------------------
+
+ SOLUTION 1: (using QUEUE) (idea similar to level order traversal)
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+struct Node 
+{ 
+	Node * left; 
+	Node* right; 
+	int hd; 
+	int data; 
+}; 
+
+Node* newNode(int key) 
+{ 
+	Node* node=new Node(); 
+	node->left = node->right = NULL; 
+	node->data=key; 
+	return node; 
+} 
+
+void topview(Node* root) 
+{ 
+	if(root==NULL) 
+	return; 
+	queue<Node*>q; 
+	map<int,int> m; 
+	int hd=0; 
+	root->hd=hd; 
+	
+	q.push(root); 
+	
+	cout<< "The top view of the tree is : \n"; 
+	
+	while(q.size()) 
+	{ 
+		hd=root->hd; 
+		if(m.count(hd)==0) 
+		m[hd]=root->data; 
+		if(root->left) 
+		{ 
+			root->left->hd=hd-1; 
+			q.push(root->left); 
+		} 
+		if(root->right) 
+		{ 
+			root->right->hd=hd+1; 
+			q.push(root->right); 
+		} 
+		q.pop(); 
+		root=q.front(); 
+		
+	} 
+	
+	
+	for(auto i=m.begin();i!=m.end();i++) 
+	{ 
+		cout<<i->second<<" "; 
+	} 
+} 
+
+int main() 
+{ 
+    Node* root = newNode(1); 
+	root->left = newNode(2); 
+	root->right = newNode(3); 
+	root->left->right = newNode(4); 
+	root->left->right->right = newNode(5); 
+	root->left->right->right->right = newNode(6); 
+	cout<<"Following are nodes in top view of Binary Tree\n"; 
+	topview(root); 
+	return 0; 
+} 
+
+Time Complexity of the above implementation is O(nlogn) where n is the number of nodes in the given binary tree with each insertion operation in Map requiring O(log2n) complexity.
+.....................................................................
+
+  Solution 2:  (RECURSION)
+
+#include<bits/stdc++.h> 
+using namespace std; 
+
+struct Node{ 
+	Node * left; 
+	Node* right; 
+	int data; 
+}; 
+
+Node* newNode(int key){ 
+	Node* node=new Node(); 
+	node->left = node->right = NULL; 
+	node->data=key; 
+	return node; 
+} 
+
+void fillMap(Node* root,int d,int l,map<int,pair<int,int>> &m)
+{ 
+	if(root==NULL) return; 
+
+	if(m.count(d)==0){ 
+		m[d] = make_pair(root->data,l); 
+	}else if(m[d].second>l){ 
+		m[d] = make_pair(root->data,l); 
+	} 
+
+	fillMap(root->left,d-1,l+1,m); 
+	fillMap(root->right,d+1,l+1,m); 
+} 
+
+void topView(struct Node *root){ 
+
+	map<int,pair<int,int>> m; 
+	fillMap(root,0,0,m); 
+	for(auto it=m.begin();it!=m.end();it++){ 
+		cout << it->second.first << " "; 
+	} 
+} 
+
+int main(){ 
+	Node* root = newNode(1); 
+	root->left = newNode(2); 
+	root->right = newNode(3); 
+	root->left->right = newNode(4); 
+	root->left->right->right = newNode(5); 
+	root->left->right->right->right = newNode(6); 
+	cout<<"Following are nodes in top view of Binary Tree\n"; 
+	topView(root); 
+	return 0; 
+} 
+
+Output:
+Following are nodes in top view of Binary Tree
+2 1 3 6
+
+..........................................................................
+
+SOLUTION 3:
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+struct Node { 
+	Node* left; 
+	Node* right; 
+	int data; 
+}; 
+
+Node* newNode(int key) 
+{ 
+	Node* node = new Node(); 
+	node->left = node->right = NULL; 
+	node->data = key; 
+	return node; 
+} 
+
+void topView(struct Node* root) 
+{ 
+	if (root == NULL) { 
+		return; 
+	} 
+
+	Node* temp = NULL; 
+	queue<pair<Node*, int> > q; 
+	map<int, int> mp; 
+	q.push({ root, 0 }); 
+
+	while (!q.empty()) 
+   { 
+		temp = q.front().first; 
+		int d = q.front().second; 
+		q.pop(); 
+
+		// If any node is not at that vertical distance 
+		// just insert that node in map and print it 
+		if (mp.find(d) == mp.end()) { 
+			cout << temp->data << " "; 
+			mp[d] = temp->data; 
+		} 
+
+		// Continue for left node 
+		if (temp->left) { 
+			q.push({ temp->left, d - 1 }); 
+		} 
+
+		// Continue for right node 
+		if (temp->right) { 
+			q.push({ temp->right, d + 1 }); 
+		} 
+	} 
+} 
+
+int main() 
+{ 
+	Node* root = newNode(1); 
+	root->left = newNode(2); 
+	root->right = newNode(3); 
+	root->left->right = newNode(4); 
+	root->left->right->right = newNode(5); 
+	root->left->right->right->right = newNode(6); 
+	cout << "Following are nodes in top view of Binary Tree\n"; 
+	topView(root); 
+	return 0; 
+} 
+
+Output:
+Following are nodes in top view of Binary Tree
+2 1 3 6
+
+TIME: O(n).
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Print Right View of a Binary Tree
+
+Right view of following tree is 1 3 7 8
+
+          1
+       /     \
+     2        3
+   /   \     /  \
+  4     5   6    7
+                  \
+                   8
+------------------------------------------------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+struct Node 
+{ 
+	int data; 
+	struct Node *left, *right; 
+}; 
+
+struct Node *newNode(int item) 
+{ 
+	struct Node *temp = (struct Node *)malloc( 
+						sizeof(struct Node)); 
+	temp->data = item; 
+	temp->left = temp->right = NULL; 
+	return temp; 
+} 
+
+void rightViewUtil(struct Node *root, int level, int *max_level) 
+{ 
+	if (root == NULL) return; 
+
+	if (*max_level < level) 
+	{ 
+		cout << root->data << "\t"; 
+		*max_level = level; 
+	} 
+
+	rightViewUtil(root->right, level + 1, max_level); 
+	rightViewUtil(root->left, level + 1, max_level); 
+} 
+
+void rightView(struct Node *root) 
+{ 
+	int max_level = 0; 
+	rightViewUtil(root, 1, &max_level); 
+} 
+
+int main() 
+{ 
+	struct Node *root = newNode(1); 
+	root->left = newNode(2); 
+	root->right = newNode(3); 
+	root->left->left = newNode(4); 
+	root->left->right = newNode(5); 
+	root->right->left = newNode(6); 
+	root->right->right = newNode(7); 
+	root->right->left->right = newNode(8); 
+
+	rightView(root); 
+	return 0; 
+} 
+
+Time Complexity: The function does a simple traversal of the tree, so the complexity is O(n).
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Level order Traversal 
+      OR
+Binary Tree Level Order Traversal
+
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its level order traversal as:
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+-------------------------------------------------------------------
+
+SOLUTION 1: (USING QUEUE)
+
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+         vector<vector<int>>res;
+    if(root==nullptr)return res;
+    queue<TreeNode*>q;
+    q.push(root);
+
+    while(!q.empty())
+    {
+        int size=q.size();
+        vector<int>v;
+
+      for(int i=0;i<size;i++)
+      {
+        TreeNode* f=q.front();
+        q.pop();
+        v.push_back(f->val);
+        if(f->left)
+        {
+            q.push(f->left);
+        }
+
+        if(f->right)
+        {
+            q.push(f->right);
+        }
+       }
+       res.push_back(v);
+   }
+    return res;
+    }
+};
+
+..................................................................
+
+SOLUTION 2: (USING RECURSION)
+
+class Solution {
+public:
+    
+    int h;
+    
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        h=height(root);
+    vector<vector<int> > v(h);
+    helper(root,v,0);
+    return v;
+    }
+    int height(TreeNode* root){
+    if(root){
+        return 1+max(height(root->left),height(root->right));
+    }
+    return 0;
+    }
+    
+    void helper(TreeNode* root,vector<vector<int> >&v,int c_level){
+      if(root){
+        v[c_level].push_back(root->val);
+        helper(root->left,v,c_level+1);
+        helper(root->right,v,c_level+1);
+    }
+    return;
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Binary Tree Level Order Traversal II
+
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its bottom-up level order traversal as:
+[
+  [15,7],
+  [9,20],
+  [3]
+]
+----------------------------------------------------------------------
+
+SOLUTION 1:(QUEUE)
+
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+   
+   vector<vector<int>>res;
+      stack<vector<int>>st;
+    if(root==nullptr)return {};
+    queue<TreeNode*>q;
+    q.push(root);
+
+    while(!q.empty())
+    {
+        int size=q.size();
+        vector<int>v;
+
+      for(int i=0;i<size;i++)
+      {
+        TreeNode* f=q.front();
+        q.pop();
+        v.push_back(f->val);
+        if(f->left)
+            q.push(f->left);
+        if(f->right)
+            q.push(f->right);
+       }
+      
+       st.push(v);
+    }
+        while(!st.empty())
+        {
+          res.push_back(st.top());
+          st.pop();
+        }
+      
+    return res;
+   }
+    
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Level order traversal in spiral form
+     OR
+Binary Tree Zigzag Level Order Traversal
+
+ 
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its zigzag level order traversal as:
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+-----------------------------------------------------------------
+
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) 
+  {
+    vector<vector<int>>res;
+    if(root==nullptr)return res;
+    queue<TreeNode*>q;
+    q.push(root);
+    
+      bool zigzag=true;
+    while(!q.empty())
+    {
+        int size=q.size();
+        vector<int>v(size);
+
+      for(int i=0;i<size;i++)
+      {
+        TreeNode* f=q.front();
+        q.pop();
+                
+        int index=0;
+        
+        if(zigzag) 
+          index=i;
+        else 
+          index=(size-1-i);
+        
+         v[index]=f->val;
+
+        if(f->left)  q.push(f->left);
+        if(f->right) q.push(f->right);
+       }
+       //toggle to boolean flag
+       zigzag=!zigzag;
+       res.push_back(v);
+   }
+    return res;
+  }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Height of a Binary Tree
+        OR
+ Maximum Depth of Binary Tree
+
+
+Example:
+Given binary tree [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its depth = 3.
+----------------------------------------------------------------------------
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+            if(root==nullptr)
+        return 0;
+
+    int h1=maxDepth(root->left);
+    int h2=maxDepth(root->right);
+
+    return 1+max(h1,h2);
+
+    }
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Diameter of Binary Tree
+
+ Example:
+Given a binary tree
+          1
+         / \
+        2   3
+       / \     
+      4   5    
+Return 3, which is the length of the path [4,2,1,3] or [5,2,1,3].
+---------------------------------------------------------------------------------
+
+SOLUTION 1: (RECURSION)
+
+int ans;
+
+int height(TreeNode* root)
+{
+    if(root==nullptr)
+        return 0;
+
+    int h1=height(root->left);
+    int h2=height(root->right);
+    ans=max(ans,h1+h2+1);
+    return 1+max(h1,h2);
+}
+
+
+class Solution {
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+     ans=1;
+    height(root);
+    return ans-1;
+    }
+};
+
+Time Complexity: O(N). We visit every node once.
+Space Complexity: O(N), the size of our implicit call stack during our depth-first search.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Check if Binary tree is height balanced or not
+          OR
+Balanced Binary Tree
+
+Example 1:
+Given the following tree [3,9,20,null,null,15,7]:
+    3
+   / \
+  9  20
+    /  \
+   15   7
+Return true.
+
+Example 2:
+Given the following tree [1,2,2,3,3,null,null,4,4]:
+
+       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+Return false.
+--------------------------------------------------------------------------------
+int depth (TreeNode *root) {
+        if (root == NULL) return 0;
+        return max (depth(root -> left), depth (root -> right)) + 1;
+    }
+
+class Solution {
+public:
+  
+    bool isBalanced(TreeNode* root) {
+       if (root == NULL) return true;
+        
+        int left=depth(root->left);
+        int right=depth(root->right);
+        
+        return abs(left - right) <= 1 && isBalanced(root->left) && isBalanced(root->right);
+    }
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+LCA in Binary Tree
+    OR
+Lowest Common Ancestor of a Binary Tree
+
+Example 1:
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+Output: 3
+Explanation: The LCA of nodes 5 and 1 is 3.
+
+Example 2:
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+Output: 5
+Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+ 
+Note:
+All of the nodes' values will be unique.
+p and q are different and both values will exist in the binary tree.
+------------------------------------------------------------------------------------------------
+
+    SOLUTION 1(a): (USING RECURSION)
+
+class Solution {
+public:
+
+	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* n1, TreeNode* n2) 
+	{
+		if (!root) return NULL;
+            if (root == n1 || root == n2) return root;
+            TreeNode *L = lowestCommonAncestor(root->left, n1, n2);
+            TreeNode *R = lowestCommonAncestor(root->right, n1, n2);
+            if (L && R) return root;  
+            return L ? L : R; 
+    }
+};
+
+           OR (if return type is integer (interviewbit wala jaisa))
+
+       TreeNode *LCA(TreeNode *root, int n1, int n2) 
+        {
+            if (!root) return NULL;
+            if (root->val == n1 || root->val == n2) return root;
+            TreeNode *L = LCA(root->left, n1, n2);
+            TreeNode *R = LCA(root->right, n1, n2);
+            if (L && R) return root; 
+            return L ? L : R; 
+        }
+
+        bool find(TreeNode *root, int n1)
+        {
+            if (!root) return false;
+            if (root->val == n1) return true;
+            return (find(root->left, n1) || find(root->right, n1));
+        }
+        
+       int Solution::lowestCommonAncestor(TreeNode* root, int n1, int n2) 
+       {
+         if (!find(root, n1) || !find(root, n2)) return -1;
+            TreeNode *ans = LCA(root, n1, n2);
+            if (!ans) return -1;
+            return ans->val;
+       }
+
+       
+ NOTE:  Time Complexity: Time complexity of the above solution is O(n) as the method does a simple tree traversal in bottom up fashion.
+Note that the above method assumes that keys are present in Binary Tree. If one key is present and other is absent, then it returns the present key as LCA (Ideally should have returned NULL).
+We can extend this method to handle all cases by passing two boolean variables v1 and v2. v1 is set as true when n1 is present in tree and v2 is set as true if n2 is present in tree. It is just below i.e.(SOLUTION 1(b))
+.......................................
+SOLUTION 1(b):
+
+class Solution {
+public:
+	TreeNode *findLCAUtil(struct TreeNode* root, TreeNode* n1, TreeNode* n2, bool &v1, bool &v2)
+	{
+		if (root == NULL) return NULL;
+
+		if (root == n1)
+		{
+			v1 = true;
+			return root;
+		}
+		if (root == n2)
+		{
+			v2 = true;
+			return root;
+		}
+		TreeNode *left_lca = findLCAUtil(root->left, n1, n2, v1, v2);
+		TreeNode *right_lca = findLCAUtil(root->right, n1, n2, v1, v2);
+		if (left_lca && right_lca) return root;
+
+		return (left_lca != NULL) ? left_lca : right_lca;
+	}
+
+	bool find(TreeNode *root, TreeNode* k)
+	{
+		if (root == NULL)
+			return false;
+
+		if (root == k || find(root->left, k) || find(root->right, k))
+			return true;
+
+		return false;
+	}
+
+
+	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* n1, TreeNode* n2)
+	{
+		bool v1 = false, v2 = false;
+		TreeNode *lca = findLCAUtil(root, n1, n2, v1, v2);
+
+		if (v1 && v2 || v1 && find(lca, n2) || v2 && find(lca, n1))
+			return lca;
+
+		return NULL;
+	}
+};  
+
+..............................................................
+
+   SOLUTION 2: (USING ITERATIVE METHOD)
+
+ class Solution {
+public:
+	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+	{
+		stack<TreeNode *> s;
+        TreeNode *prev = NULL; 
+        TreeNode *curr = NULL; 
+        TreeNode *parent = NULL; 
+        
+        int pf = 0;
+        int qf = 0;
+
+        if (!root) return NULL;
+        if (p == q) return p;
+        for (TreeNode* tmp = root; tmp; tmp = tmp->left) 
+            s.push(tmp);
+        while (!s.empty()) 
+        {
+            curr = s.top();
+            if (parent && prev == parent) parent = curr;
+            if (curr->right && prev != curr->right) 
+            {
+                   for (TreeNode *tmp = curr->right; tmp; tmp = tmp->left)
+                    s.push(tmp);
+                    continue;
+            }   
+            s.pop();
+            if (curr == p)
+            {
+                if (qf) return parent;
+                pf = 1;
+                parent = curr;
+            }    
+            if (curr == q) 
+            {
+                if (pf) return parent;
+                qf = 1;
+                parent = curr;
+            }   
+            prev = curr;
+        }
+        return NULL;
+      }
+    }
+};
+
+TIME AND SPACE BOTH O(n).
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Same Tree
+   OR
+ Check if two trees are identical or not
+
+Example 1:
+
+Input:     1         1
+          / \       / \
+         2   3     2   3
+
+        [1,2,3],   [1,2,3]
+
+Output: true
+Example 2:
+
+Input:     1         1
+          /           \
+         2             2
+
+        [1,2],     [1,null,2]
+
+Output: false
+Example 3:
+
+Input:     1         1
+          / \       / \
+         2   1     1   2
+
+        [1,2,1],   [1,1,2]
+
+Output: false
+--------------------------------------------------------
+SOLUTION 1: (RECURSION)
+
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+         if (p == NULL && q == NULL) return true;
+           if (q == NULL || p == NULL) return false;
+         if (p->val != q->val) return false;
+              return isSameTree(p->right, q->right) && isSameTree(p->left, q->left);
+    }
+};
+
+Time complexity : O(N), where N is a number of nodes in the tree, since one visits each node exactly once.
+Space complexity :O(log(N)) in the best case of completely balanced tree and O(N) in the worst case of completely unbalanced tree, to keep a recursion stack.
+.......................................................
+
+ SOLUTION 2: (ITERATION)
+  
+ class Solution {
+public:
+     bool isSameTree(TreeNode* p, TreeNode* q) {
+  
+    if (p==NULL  && q==NULL) return true;   
+    if (p == NULL) return false; 
+    if (q == NULL) return false; 
+      
+    queue<TreeNode *> q1, q2; 
+  
+    q1.push(p); 
+    q2.push(q); 
+  
+    while (!q1.empty() && !q2.empty()) 
+    { 
+        TreeNode *n1 = q1.front(); 
+        TreeNode *n2 = q2.front(); 
+  
+        if (n1->val != n2->val) 
+           return false; 
+  
+          q1.pop(), q2.pop(); 
+  
+       if (n1->left && n2->left) 
+        { 
+            q1.push(n1->left); 
+            q2.push(n2->left); 
+        } 
+  
+        else if (n1->left || n2->left) 
+            return false; 
+  
+        if (n1->right && n2->right) 
+        { 
+            q1.push(n1->right); 
+            q2.push(n2->right); 
+        } 
+        else if (n1->right || n2->right) 
+            return false; 
+    } 
+  
+    return true; 
+    }
+};
+
+Time complexity : O(N) since each node is visited exactly once.
+Space complexity : O(log(N)) in the best case of completely balanced tree and O(N) in the worst case of completely unbalanced tree, to keep a deque.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Maximum path sum
+    OR
+ Binary Tree Maximum Path Sum
+
+Example 1:
+Input: [1,2,3]
+
+       1
+      / \
+     2   3
+
+Output: 6
+
+Example 2:
+Input: [-10,9,20,null,null,15,7]
+
+   -10
+   / \
+  9  20
+    /  \
+   15   7
+
+Output: 42
+-------------------------------------------------------
+
+ class Solution {
+public:
+    
+int findMaxUtil(TreeNode* root, int &res) 
+{ 
+   if (root == NULL) 
+        return 0; 
+
+    int l = findMaxUtil(root->left,res); 
+    int r = findMaxUtil(root->right,res); 
+    int max_single = max(max(l, r) + root->val, root->val); 
+    int max_top = max(max_single, l + r + root->val); 
+    res = max(res, max_top); 
+    return max_single; 
+} 
+    
+ int maxPathSum(TreeNode* root) 
+ {
+    int res = INT_MIN; 
+    findMaxUtil(root, res); 
+    return res; 
+  }
+};
+
+Time Complexity: O(n) where n is number of nodes in Binary Tree.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Path Sum
+
+Example:
+Given the below binary tree and sum = 22,
+      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \      \
+7    2      1
+return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
+---------------------------------------------------------
+
+SOLUTION 1: (ITERATIVE METHOD USING STACK)
+
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum)
+    {
+     if( !root ) return false;
+        
+        stack<pair<TreeNode*,int> > s;
+        s.push(make_pair(root, sum));
+        int val;
+        TreeNode* p;
+        
+        while( !s.empty() ) {
+            p = s.top().first;
+            val = s.top().second;
+            s.pop();
+            if( p->left == NULL && p->right == NULL && p->val == val ) 
+                return true;
+            if( p->right ) 
+                s.push(make_pair(p->right, val - p->val));
+            if( p->left ) 
+                s.push(make_pair(p->left, val - p->val));
+        }
+        return false;
+  }
+};
+.............................................................
+
+ SOLUTION 2: (RECURSION)
+
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum)
+    {
+      if(!root)
+          return 0;
+     if(root->val==sum && !root->left && !root->right)
+         return 1;
+        
+     return hasPathSum(root->left,sum-root->val)|| hasPathSum(root->right,sum-root->val);
+    }
+};
+
+Time Complexity: O(n)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Path Sum II
+
+ Example:
+
+Given the below binary tree and sum = 22,
+
+      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \    / \
+7    2  5   1
+Return:
+
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+-----------------------------------------------------
+
+ class Solution {
+public:
+    void findPaths(TreeNode* node, int sum, vector<int>& path, vector<vector<int> >& paths) {
+        if (!node) return;
+        path.push_back(node -> val);
+        if (!(node -> left) && !(node -> right) && sum == node -> val)
+            paths.push_back(path);
+        findPaths(node -> left, sum - node -> val, path, paths);
+        findPaths(node -> right, sum - node -> val, path, paths);
+        path.pop_back();
+    }
+    
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+         vector<vector<int> > paths;
+        vector<int> path;
+        findPaths(root, sum, path, paths);
+        return paths;  
+    }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  Path Sum III   (LEETCODE)
+
+ Example:
+
+root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
+
+      10
+     /  \
+    5   -3
+   / \    \
+  3   2   11
+ / \   \
+3  -2   1
+
+Return 3. The paths that sum to 8 are:
+
+1.  5 -> 3
+2.  5 -> 2 -> 1
+3. -3 -> 11
+----------------------------------------------------------------
+
+     int sumUp(TreeNode* root, int pre, int& sum)
+    {
+        if(!root) return 0;
+        int current = pre + root->val;
+        return (current == sum) + sumUp(root->left, current, sum) + sumUp(root->right, current, sum);
+    }
+
+class Solution
+{
+  public:
+    int pathSum(TreeNode* root, int sum) 
+    {
+        if(!root) return 0;
+        return sumUp(root, 0, sum) + pathSum(root->left, sum) + pathSum(root->right, sum);
+    }
+};
+
+time: O(n)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+ Path Sum IV
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  Sum Root to Leaf Numbers
+
+ Example:
+Input: [1,2,3]
+    1
+   / \
+  2   3
+Output: 25
+Explanation:
+The root-to-leaf path 1->2 represents the number 12.
+The root-to-leaf path 1->3 represents the number 13.
+Therefore, sum = 12 + 13 = 25.
+
+Example 2:
+Input: [4,9,0,5,1]
+    4
+   / \
+  9   0
+ / \
+5   1
+Output: 1026
+Explanation:
+The root-to-leaf path 4->9->5 represents the number 495.
+The root-to-leaf path 4->9->1 represents the number 491.
+The root-to-leaf path 4->0 represents the number 40.
+Therefore, sum = 495 + 491 + 40 = 1026.
+--------------------------------------------------------------
+
+void sumHelper(TreeNode* root,int val,int &sum)
+    {
+        if(!root)
+            return;
+        val=val*10+root->val;
+        if(!root->left and !root->right)
+        {
+            sum+=val;
+            val-=root->val;
+        }
+        sumHelper(root->left,val,sum);
+        sumHelper(root->right,val,sum);
+    }
+ 
+
+class Solution {
+public:
+    
+    int sumNumbers(TreeNode* root) 
+    {
+        int sum=0;
+        sumHelper(root,0,sum);
+        return sum;
+    }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ Construct Binary Tree from inorder and preorder
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+preorder = [3,9,20,15,7]
+inorder = [9,3,15,20,7]
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+--------------------------------------------------------------------------
+
+class Solution {
+public:
+    unordered_map<int, int>memo;
+TreeNode* buildTreeUtil(vector<int>&inorder, int is, int ie, vector<int>&preorder, int ps, int pe){
+    if(is > ie || ps > pe)return NULL;
+    int data = preorder[ps];
+    TreeNode* root = new TreeNode(data);
+    
+    int inIdx = memo[data];
+    int nodesOnLeft = inIdx-is;
+    root->left = buildTreeUtil(inorder, is, inIdx-1, preorder, ps+1, ps+nodesOnLeft);
+    root->right = buildTreeUtil(inorder, inIdx+1, ie, preorder, ps+nodesOnLeft+1, pe);
+    return root;
+}
+    
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if(preorder.size() == 0 || inorder.size() == 0 || preorder.size() != inorder.size())return         NULL;
+    for(int i = 0; i < inorder.size(); ++i){
+        memo[inorder[i]] = i;
+    }
+    return buildTreeUtil(inorder, 0, inorder.size()-1, preorder, 0, preorder.size()-1);
+    }
+};
+
+TIME: O(N)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Construct Binary Tree from Inorder and Postorder
+
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+
+inorder = [9,3,15,20,7]
+postorder = [9,15,7,20,3]
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+----------------------------------------------------------------------------
+
+class Solution {
+public:
+    
+     TreeNode* helper(vector<int> &inorder,vector<int> &postorder,int inStart, int inEnd, int postIndex,unordered_map<int,int> &u)
+    {
+        if(inStart>inEnd || postIndex<0)
+            return NULL;
+        TreeNode* root=new TreeNode(postorder[postIndex]);
+        int index=-1;
+        if(u.find(postorder[postIndex])!=u.end())
+            index=u[postorder[postIndex]];
+        
+        root->right=helper(inorder,postorder,index+1,inEnd,postIndex-1,u);
+        root->left=helper(inorder,postorder,inStart,index-1,postIndex-(inEnd-index+1),u);
+        return root;
+        
+    }
+   
+    
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder)
+    {
+           unordered_map<int,int> u;
+            for(int i=0;i<inorder.size();i++)
+            {
+                u[inorder[i]]=i;
+            }
+            return helper(inorder,postorder,0,inorder.size()-1,postorder.size()-1,u);
+    }
+};
+
+TIME: O(n).
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  Flatten Binary Tree to Linked List
+
+For example, given the following tree:
+
+    1
+   / \
+  2   5
+ / \   \
+3   4   6
+The flattened tree should look like:
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          6
+-------------------------------------------------------
+
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+           if (!root) return;
+
+        TreeNode* node = root;
+        while (node) {
+
+            if (node->left) 
+            {
+                TreeNode *rightMost = node->left;
+                while (rightMost->right) 
+                {
+                    rightMost = rightMost->right;
+                }
+                rightMost->right = node->right;
+                node->right = node->left;
+                node->left = NULL;
+            }
+            node = node->right;
+        }
+    }
+};
+
+TIME: O(N)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Check if Binary Tree is mirror of itself or not
+    OR
+Symmetric Tree
+
+For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+ 
+
+But the following [1,2,2,null,3,null,3] is not:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+--------------------------------------
+
+SOLUTION 1: (RECURSIVE)
+
+class Solution {
+public:
+     bool isMirror(TreeNode* t1, TreeNode* t2) {
+     if (t1 == NULL && t2 == NULL) return true;
+    if (t1 == NULL || t2 == NULL) return false;
+    return (t1->val == t2->val)
+        && isMirror(t1->right, t2->left)
+        && isMirror(t1->left, t2->right);
+     }
+    bool isSymmetric(TreeNode* root) {
+      return isMirror(root, root);
+    }
+};
+
+TIME AND SPACE: O(N).
+...................................................
+
+SOLUTION 2: (ITERATION)
+
+class Solution {
+public:
+   
+    bool isSymmetric(TreeNode* root) {
+      stack<pair<TreeNode*, TreeNode*>> st;
+    st.emplace(root, root);
+    while (!st.empty()) 
+    {
+      pair<TreeNode*, TreeNode*> cur = st.top(); st.pop();
+      if (cur.first == nullptr && cur.second == nullptr) continue;
+      if (cur.first != nullptr && cur.second == nullptr) return false;
+      if (cur.first == nullptr && cur.second != nullptr) return false;
+      if (cur.first->val != cur.second->val) return false;
+      st.emplace(cur.first->left, cur.second->right);
+      st.emplace(cur.first->right, cur.second->left);
+    }
+    return true;
+    }
+};
+
+TIME AND SPACE: O(N)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
  create bst
@@ -4089,11 +8621,12 @@ public:
     }
     }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
  To search an element in BST, returns true if element is found
- ------------------------------------------------------------------------
- 
+
+ ---------------------------------
  bool Search(BstNode* root, int data) {
     if (root == NULL) {
         return false;
@@ -4108,9 +8641,10 @@ public:
         return Search(root->right, data);
     }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Populating Next Right Pointers in Each Node
+.................................................
 
 PROBLEM STATEMENT : You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition:
 struct Node {
@@ -4161,23 +8695,87 @@ public:
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+Construct balanced BST from given keys.
+         OR
+Construct BST from given keys
+----------------------------------------
 
-Construct BST from given keys.
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+
+  int data;
+  node* left, *right;
+};
+
+node* newnode(int key)
+{
+  node* root = new node;
+  root->data = key;
+  root->left = root->right = NULL;
+  return root;
+}
+
+void inorder(node* root)
+{
+  if (!root) return;
+  inorder(root->left);
+  cout << root->data << " ";
+  inorder(root->right);
+}
+
+node* insert(node* root, int key)
+{
+  if (!root) return newnode(key);
+  if (key < root->data)
+    root->left = insert(root->left, key);
+  if (key > root->data)
+    root->right = insert(root->right, key);
+  return root;
+}
 
 
+void conv(int a[], int l, int r, node* &root)
+{
+  if (l > r)return ;
+
+  int mid = l + ((r - l) >> 1);
+  root = newnode(a[mid]);
+  conv(a, l, mid - 1, root->left);
+  conv(a, mid + 1, r, root->right);
+}
+
+node* convert(int a[], int n)
+{
+  sort(a, a + n);
+  node* root = NULL;
+  conv(a, 0, n - 1, root);
+  return root;
+}
 
 
+signed main()
+{
+#ifndef ONLINE_JUDGE
+  freopen ("input.txt", "r", stdin);
+  freopen ("output.txt", "w", stdout);
+#endif
 
+  int n;
+  cin >> n;
 
+  int a[n];
+  for (int i = 0; i < n; i++)
+    cin >> a[i];
 
+  node* root = convert(a, n);
+  inorder(root);
+  return 0;
 
+}
 
-
-
-
-
-
-
+TIME COMPLEXITY: O(nlogn).
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
  Validate Binary Search Tree
@@ -4202,7 +8800,7 @@ Example 2:
 Input: [5,1,4,null,null,3,6]
 Output: false
 Explanation: The root node's value is 5 but its right child's value is 4.
------------------------------------------------------------------------------------
+--------------------
 
 APPROACH 1: (RECURSION)
 
@@ -4302,7 +8900,7 @@ Output :  17
 
 Input  :  k = 12
 Output :  9
----------------------------------------------------------------------------------
+-----------
 
 SOLUTION 1: (TIME EFFICIENT)
 
@@ -5441,6 +10039,112 @@ SOLUTION2 : (ITERATIVE METHOD)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Find a pair with a given sum in BST
+       
+Input : sum = 28
+        Root of below tree
+Output : Pair is found (16, 12)
+-----------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node
+{
+	int data;
+	struct Node *left, *right;
+};
+
+Node* NewNode(int data)
+{
+	Node* temp = (Node*)malloc(sizeof(Node));
+	temp->data = data;
+	temp->left = NULL;
+	temp->right = NULL;
+	return temp;
+}
+
+Node* insert(Node* root, int key)
+{
+	if (root == NULL)
+		return NewNode(key);
+	if (key < root->data)
+		root->left = insert(root->left, key);
+	else
+		root->right = insert(root->right, key);
+	return root;
+}
+
+bool findpairUtil(Node* root, int sum, unordered_set<int> &set)
+{
+	if (root == NULL)
+		return false;
+
+	if (findpairUtil(root->left, sum, set))
+		return true;
+
+	if (set.find(sum - root->data) != set.end()) {
+		cout << "Pair is found ("
+		     << sum - root->data << ", "
+		     << root->data << ")" << endl;
+		return true;
+	}
+	else
+		set.insert(root->data);
+
+	return findpairUtil(root->right, sum, set);
+}
+
+void findPair(Node* root, int sum)
+{
+	unordered_set<int> set;
+	if (!findpairUtil(root, sum, set))
+		cout << "Pairs do not exit" << endl;
+}
+
+int main()
+{
+
+#ifndef ONLINE_JUDGE
+	// for getting input from input.txt
+	freopen("input.txt", "r", stdin);
+	// for writing output to output.txt
+	freopen("output.txt", "w", stdout);
+#endif
+
+	Node* root = NULL;
+	root = insert(root, 15);
+	root = insert(root, 10);
+	root = insert(root, 20);
+	root = insert(root, 8);
+	root = insert(root, 12);
+	root = insert(root, 16);
+	root = insert(root, 25);
+	root = insert(root, 10);
+
+	int sum = 33;
+	findPair(root, sum);
+
+	return 0;
+}
+
+TIME : O(N)
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   BST iterator
@@ -5463,7 +10167,102 @@ You may assume that next() call will always be valid, that is, there will be at 
 -----------------------------------
 
 
+class BSTIterator {
 
+    stack<TreeNode*> st;
+    
+    void find_left(TreeNode* root)
+    {
+        TreeNode* p = root;
+        while (p != NULL)
+        {
+            st.push(p);
+            p = p->left;
+        }
+    }
+
+public:
+    
+    BSTIterator(TreeNode *root) 
+    {
+        find_left(root);
+    }
+
+    
+    bool hasNext() 
+    {
+        if (st.empty())
+            return false;
+        return true;
+    }
+
+    int next()
+    {
+        TreeNode* top = st.top();
+        st.pop();
+        if (top->right != NULL)
+            find_left(top->right);
+            
+        return top->val;
+    }
+};
+
+O(1) time and uses O(h) memory
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Size of the largest BST in a Binary Tree
+            OR
+Maximum Sum BST in Binary Tree
+
+Example 1:
+Input: root = [1,4,3,2,4,2,5,null,null,null,null,null,null,4,6]
+Output: 20
+Explanation: Maximum sum in a valid Binary search tree is obtained in root node with key equal to 3.
+
+Example 2:
+Input: root = [4,3,null,1,2]
+Output: 2
+Explanation: Maximum sum in a valid Binary search tree is obtained in a single root node with key equal to 2.
+
+Example 3:
+Input: root = [-4,-2,-5]
+Output: 0
+Explanation: All values are negatives. Return an empty BST.
+
+Example 4:
+Input: root = [2,1,3]
+Output: 6
+
+Example 5:
+Input: root = [5,4,8,3,null,6,3]
+Output: 7
+---------------------------------------------------------------------------------------------------------
+
+class Solution 
+{
+ public:
+    int max_sum=0;
+    
+    vector<int>dfs(TreeNode* n)
+    {
+    auto l = n->left ? dfs(n->left) : vector<int>{0, n->val, n->val - 1};
+    auto r = n->right ? dfs(n->right) : vector<int>{0, n->val + 1, n->val};
+    if (l[2] < n->val && n->val < r[1]) {
+        max_sum = max(max_sum, n->val + l[0] + r[0]);
+        return {n->val + l[0] + r[0], l[1], r[2]};        
+    }
+    return {0, INT_MIN, INT_MAX};
+}
+    
+    int maxSumBST(TreeNode* root)
+   {
+        dfs(root);
+        return max_sum;
+    }
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -5490,14 +10289,7 @@ You may assume that next() call will always be valid, that is, there will be at 
 
 -----------------------------
 
+
+
    
   
-
-
-
-
- 
- 
-  
-  
- 
