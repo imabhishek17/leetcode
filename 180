@@ -350,6 +350,83 @@ Time Complexity: O(max(N,log K))
 space: O(1)
 /////////////////////////////////////////////////////////////////////////
 
+Add two numbers represented by two arrays
+
+	Examples :
+Input : n = 3, m = 3
+        a[] = { 1, 2, 3 }
+        b[] = { 2, 1, 4 }
+Output : 337
+123 + 214 = 337
+
+Input : n = 4, m = 3
+        a[] = { 9, 5, 4, 9 }
+        b[] = { 2, 1, 4 }
+Output : 9763
+
+-------------------------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+int calSumUtil(int a[], int b[], int n, int m) 
+{ 
+	int sum[n]; 
+	int i = n - 1, j = m - 1, k = n - 1; 
+	int carry = 0, s = 0; 
+
+	while (j >= 0) 
+	{ 
+     	s = a[i] + b[j] + carry; 
+		sum[k] = (s % 10); 
+    	carry = s / 10; 
+		k--; 
+		i--; 
+		j--; 
+	} 
+
+	while (i >= 0) 
+	{ 
+		s = a[i] + carry; 
+		sum[k] = (s % 10); 
+		carry = s / 10; 
+		i--; 
+		k--; 
+	} 
+	int ans = 0;  
+	
+	if (carry) 
+		ans = 10; 
+
+	for (int i = 0; i <= n - 1; i++) 
+	{ 
+		ans += sum[i]; 
+		ans *= 10; 
+	}
+	return ans / 10; 
+} 
+
+int calSum(int a[], int b[], int n, int m) 
+{ 
+	if (n >= m) 
+		return calSumUtil(a, b, n, m); 
+	else
+		return calSumUtil(b, a, m, n); 
+} 
+
+int main() 
+{ 
+	int a[] = { 9, 3, 9 }; 
+	int b[] = { 6, 1 }; 
+	int n = sizeof(a) / sizeof(a[0]); 
+	int m = sizeof(b) / sizeof(b[0]); 
+	cout << calSum(a, b, n, m) << endl; 
+	return 0; 
+} 
+
+OUTPUT: 1000
+
+/////////////////////////////////////////////////////////////////////////////
   Plus One
 
   Example 1:
@@ -2490,9 +2567,324 @@ public:
 Time complexity: O(n).
 Only one traversal is needed and the time complexity is O(n) under the assumption that hash insert and search take O(1) time.
 Auxiliary space : O(n).
-To store every element in hashmap O(n) space is needed.
+To store every element in set O(n) space is needed.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Length of Longest Subarray with 0 sum
+
+--------------------------------------------
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+int maxLen(int arr[], int n) 
+{ 
+	unordered_map<int, int> presum; 
+
+	int sum = 0,max_len = 0;  
+	for (int i = 0; i < n; i++) 
+	{ 
+		sum += arr[i]; 
+
+		if (arr[i] == 0 && max_len == 0) 
+			max_len = 1; 
+
+		if (sum == 0) 
+			max_len = i + 1; 
+
+		if(presum.find(sum)==presum.end()) 	
+		   presum[sum] = i; 
+		 
+		if (presum.find(sum) != presum.end()) 
+		   max_len = max(max_len, i - presum[sum]); 
+	} 
+
+	return max_len; 
+} 
+ 
+int main() 
+{ 
+	int arr[] = { 15, -2, 2, -8, 1, 7, 10, 23 }; 
+	int n = sizeof(arr) / sizeof(arr[0]); 
+	cout << "Length of the longest 0 sum subarray is "
+		<< maxLen(arr, n); 
+
+	return 0; 
+} 
+
+output: 5
+
+TIME AND SPACE: O(n)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Largest Continuous Sequence Zero Sum
+
+Find the largest continuous sequence in a array which sums to zero.
+Example:
+Input:  {1 ,2 ,-2 ,4 ,-4}
+Output: {2 ,-2 ,4 ,-4}
+------------------------------------------------------------------------
+
+vector<int> Solution::lszero(vector<int> &A) {
+  if(A.size()==0)
+        return {};
+        
+    vector<int>v;
+    unordered_map<int,int>m;      //{prefixSum,index}
+    int i,p=0,k=0,l=0;
+    m.insert({0,-1});         //if first element is 0
+    for(i=0;i<A.size();++i)
+    {
+        p+=A[i];
+        if(m.find(p)!=m.end())
+        {
+            if(i-m[p]>l-k)
+            {
+                k=m[p];
+                l=i;
+            }
+        }
+        else
+            m.insert({p,i});
+    }
+    for(i=k+1;i<=l;++i)
+        v.push_back(A[i]);
+    return v;
+}
+
+TIME: O(n)
+SPACE: O(n)
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Length of Longest sub-array having sum k
+
+Examples:
+Input : arr[] = { 10, 5, 2, 7, 1, 9 }, k = 15
+Output : 4
+The sub-array is {5, 2, 7, 1}.
+
+Input : arr[] = {-5, 8, -14, 2, 4, 12}, k = -5
+Output : 5
+---------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+int lenOfLongSubarr(int arr[], int n, int k)
+{
+	unordered_map<int, int> um;
+	int sum = 0, maxLen = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		sum += arr[i];
+		if (sum == k)
+			maxLen = i + 1;
+
+		if (um.find(sum) == um.end())
+			um[sum] = i;
+
+		if (um.find(sum - k) != um.end()) 
+            maxLen = max(maxLen, i - um[sum-k]); 
+	}
+	return maxLen;
+}
+
+int main()
+{
+#ifndef ONLINE_JUDGE
+	// for getting input from input.txt
+	freopen("input.txt", "r", stdin);
+	// for writing output to output.txt
+	freopen("output.txt", "w", stdout);
+#endif
+	int arr[] = {10, 5, 2, 7, 1, 9};
+	int n = sizeof(arr) / sizeof(arr[0]);
+	int k = 15;
+	cout << "Length = "
+	     << lenOfLongSubarr(arr, n, k);
+	return 0;
+}
+
+TIME: O(n)
+SPACE: O(n)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Count the Number of Subarrays with Sum Equals K (LEETCODE)
+
+Example 1:
+Input:nums = [1,1,1], k = 2
+Output: 2
+------------------------------------
+
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        int n = nums.size();
+        if(n==0)
+            return 0;
+        
+        unordered_map<int,int> mymap;   
+        int currSUM=0, i=0, count=0;
+        
+        for(int i=0;i<n;i++)
+        {
+            currSUM += nums[i];
+            
+            if(currSUM == k)   
+                count += 1;
+            
+            if(mymap.find(currSUM-k)!=mymap.end())
+                count += mymap[currSUM-k];
+            
+            mymap[currSUM] += 1;
+        }
+        return count;
+    }
+};
+
+TIME: O(n)
+SPACE: O(n)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Count the number of subarrays having a given XOR
+------------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+#ifndef ONLINE_JUDGE
+	// for getting input from input.txt
+	freopen("input.txt", "r", stdin);
+	// for writing output to output.txt
+	freopen("output.txt", "w", stdout);
+#endif
+	int n;
+	cin >> n;
+	int arr[n];
+
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+
+	int m;
+	cin >> m;
+
+	long long ans = 0;
+	vector<int>xorArr(n);
+
+	unordered_map<int, int> mp;
+	xorArr[0] = arr[0];
+
+	for (int i = 1; i < n; i++)
+		xorArr[i] = xorArr[i - 1] ^ arr[i];
+
+	for (int i = 0; i < n; i++)
+	{
+		int tmp = m ^ xorArr[i];
+		ans = ans + ((long long)mp[tmp]);
+		if (xorArr[i] == m)
+			ans++;
+		mp[xorArr[i]]++;
+	}
+	cout << "ans= " << ans;
+}
+
+
+Output: ans= 4
+
+Time Complexity: O(n)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Longest substring without repeat
+
+Example 1:
+Input: "abcabcbb"
+Output: 3 
+Explanation: The answer is "abc", with the length of 3.
+ 
+Example 2:
+Input: "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+
+Example 3:
+Input: "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3. 
+             Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+-------------------------------------------------------------------------------------
+ 
+SOLUTION:1 (BRUTE FORCE)
+
+ TIME : O(n^2) and SPACE: O(n)
+
+...............................
+
+SOLUTION 2: (SLIDING WINDOW ALGO)
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+      if(!s.size()) return 0;
+        
+        int i=0,j=0,mx=0;
+        int n=s.size();
+        
+        set<int>ms;
+        
+        while(j<n)
+        {
+            if(ms.find(s[j])==ms.end())
+            {
+                ms.insert(s[j]);
+                j++;
+                mx=max(j-i,mx);
+            }
+            else
+            {
+                ms.erase(s[i]);
+                i++;
+            }
+        }
+        return mx;
+    } 
+};
+
+TIME : O(2*n)~O(n) and SPACE: O(n)
+.............................................
+
+SOLUTION 3: (SLIDING WINDOW ALGO OPTIMISED)
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+      int n = s.size(), ans = 0, i=0, j=0;
+        map<char, int> m; 
+        
+    while (j < n)
+	{
+		if (m.count(s[j]))
+        {
+           i = max(m[s[j]], i);
+        }
+		ans = max(ans, j - i + 1);
+		m[s[j]] = j + 1;
+		j++;
+	}
+        return ans;
+    } 
+};
+
+Time complexity : O(2n)~O(n). In the worst case each character will be visited twice by i and j.
+
+Space complexity : O(min(m,n)). Same as the previous approach. We need O(k) space for the sliding window, where k is the size of the Set. The size of the Set is upper bounded by the size of the string n and the size of the charset/alphabet m.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Reverse a LinkedList   (RECURSIVE AND ITERATIVE APPROACH)
 
 Input: 1->2->3->4->5->NULL
@@ -3388,6 +3780,9 @@ public:
       
     }
 };
+
+TIME: O(N)
+SPACE: O(1)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Max Consecutive Ones
