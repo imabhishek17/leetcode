@@ -2952,19 +2952,6 @@ Output: Node 4 from this list (Serialization: [4,5,6])
 Since the list has two middle nodes with values 3 and 4, we return the second one.
 
 -----------------------------------------
-class Solution {
-public:
-    ListNode* middleNode(ListNode* head) {
-        vector<ListNode*> A = {head};
-        while (A.back()->next != NULL)
-            A.push_back(A.back()->next);
-        return A[A.size() / 2];
-    }
-};
-  TIME AND SPACE: O(N) and O(1).
-
- ALTERNATIVE SOLUTION :
-
    class Solution {
 public:
     ListNode* middleNode(ListNode* head) {
@@ -4057,7 +4044,6 @@ Find Nth positive number whose digital root is X   (GFG)   (samjh nahi aaya)
 PROBLEM STATEMENT :  Given a number X ( 1<= X <= 9) and a positive number N, find the Nth positive number whose digital root is X. For example, the digital root of 65 is 2, because 6 + 5 = 11 and 1 + 1 = 2.
 .......
 Efficient Approach:
-We can find digital root of a number K directly using the formula:
 digitalRoot(k) = (k - 1)mod 9 +1
 From this we can find the N-th number whose digital root is K as,
 Nth number = (N - 1)*9 + K
@@ -10682,7 +10668,508 @@ class Solution
 
  Depth first search 
 
+EXAMPLE: 
+
+6 5
+1 2
+1 3
+1 4
+2 5
+2 6
+
+OUTPUT:
+
+1-->2-->5-->6-->3-->4-->
+
 -----------------------------
+
+ #include<bits/stdc++.h>
+using namespace std;
+
+vector<int>adj[100005];
+vector<int>vis(100005);
+
+void dfs(int s)
+{
+	vis[s] = 1;
+	cout << s << "-->";
+	for (auto x : adj[s])
+	{
+		if (!vis[x])
+			dfs(x);
+	}
+}
+
+signed main()
+{
+	int n, e;
+	cin >> n >> e;
+
+	while (e--)
+	{
+		int a, b;
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+	dfs(1);
+
+}
+
+TIME: O(V+E)
+SPACE: O(E)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+BIPARTITE CHECK 
+
+EXAMPLE 1:
+5 5
+1 2
+2 3
+2 4
+3 4
+4 5
+OUTPUT: NO
+
+EXAMPLE 2:
+5 4
+1 2
+2 3
+3 4
+4 5
+
+OUTPUT: YES
+-----------------------------------------------------------
+
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<int>adj[100005];
+vector<int>vis(100005);
+vector<int>col(100005);
+
+bool dfs(int s, int c)
+{
+	vis[s] = 1;
+	col[s] = c;
+
+	for (auto x : adj[s])
+	{
+		if (!vis[x])
+		{
+			if (dfs(x, c ^ 1) == 0)
+				return 0;
+		}
+		else
+		{
+			if (col[x] == col[s])
+				return 0;
+		}
+	}
+	return 1;
+}
+
+signed main()
+{
+#ifndef ONLINE_JUDGE
+	// for getting input from input.txt
+	freopen("input.txt", "r", stdin);
+	// for writing output to output.txt
+	freopen("output.txt", "w", stdout);
+#endif
+
+	int n, e;
+	cin >> n >> e;
+
+	for (int i = 0; i < n; i++)
+		adj[i].clear();
+
+	while (e--)
+	{
+		int a, b;
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+
+     bool flag = 1;   
+
+	for (int i = 1; i <= n; i++)
+	{
+		if (vis[i] == 0)
+		{
+			bool res = dfs(i, 0);
+			if (res == 0)
+				flag = 0;
+		}
+	}
+
+	if (flag)
+		cout << "IT IS BIPARTITE";
+	else
+		cout << "NOT BIPARTITE";
+
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DETECT CYCLE IN AN UNDIRECTED GRAPH
+------------------------------------------------
+
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<int>adj[100005];
+vector<int>vis(100005);
+vector<int>col(100005);
+
+bool dfs(int s, int par)
+{
+	vis[s] = 1;
+
+	for (auto x : adj[s])
+	{
+		if (!vis[x])
+		{
+			if (dfs(x, s) == 1)
+				return 1;
+		}
+		else
+		{
+			if (x != par)
+				return 1;
+		}
+	}
+	return 0;
+}
+
+signed main()
+{
+#ifndef ONLINE_JUDGE
+	// for getting input from input.txt
+	freopen("input.txt", "r", stdin);
+	// for writing output to output.txt
+	freopen("output.txt", "w", stdout);
+#endif
+
+	int n, e;
+	cin >> n >> e;
+
+	for (int i = 1; i <= n; i++)
+		adj[i].clear() , vis[i] = 0;
+
+	while (e--)
+	{
+		int a, b;
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+
+	bool flag = 1;
+
+	for (int i = 1; i <= n; i++)
+	{
+		if (!vis[i])
+		{
+			bool res = dfs(i, 0);
+			if (res)
+			flag = 0;
+		}
+	}
+
+	if (flag)
+		cout << "Graph do not contains cycle";
+	else
+		cout << "Graph contain cycle";
+
+}
+
+
+Time Complexity: O(V+E).
+Time Complexity of this method is same as time complexity of DFS traversal which is O(V+E).
+Space Complexity: O(V).
+To store the visited and recursion stack O(V) space is needed.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DETECT CYCLE IN DIRECTED GRAPH
+--------------------------------------------------------------
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+#define MAX 100005
+
+vector<int>v[MAX];
+int n;
+vector<bool>rec(MAX);
+vector<bool>vis(MAX);
+
+bool dfs(int s, vector<bool> vis, vector<bool> rec)
+{
+	if (!vis[s])
+	{
+		vis[s] = 1;
+		rec[s] = 1;
+		for (auto child : v[s])
+		{
+			if (!vis[child] && dfs(child, vis, rec)) return 1;
+			else if (rec[child] == 1) return 1;
+		}
+	}
+	rec[s] = 0;
+	return 0;
+}
+
+signed main()
+{
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+#endif
+
+	int m, a, b;
+	cin >> n >> m;
+
+	while (m--)
+	{
+		cin >> a >> b;
+		v[a].push_back(b);
+	}
+
+	bool flag = 1;
+
+
+	for (int i = 1; i <= n; i++)
+	{
+		if (!vis[i])
+		{
+			bool res = dfs(i, vis, rec);
+			if (res)
+			flag = 0;
+		}
+	}
+
+	if (flag)
+		cout << "Graph do not contains cycle";
+	else
+		cout << "Graph contain cycle";
+
+}
+
+Complexity Analysis:
+Time Complexity: O(V+E).
+Time Complexity of this method is same as time complexity of DFS traversal which is O(V+E).
+Space Complexity: O(V).
+To store the visited and recursion stack O(V) space is needed.
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
+BFS IN GRAPH
+(HACKEREARTH: Monk and the Islands)
+
+input:
+2
+3 2
+1 2
+2 3
+4 4
+1 2
+2 3
+3 4
+4 2
+
+output:
+ 2
+ 2
+----------------------------------------------
+
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<int>adj[100005];
+vector<int>vis(100005);
+vector<int>col(100005);
+vector<int>dis(100005);
+
+void bfs(int s)
+{
+	queue<int>q;
+	q.push(s);
+	dis[s]=0;
+    vis[s]=1;
+
+	while(!q.empty())
+	{
+		int cur=q.front();
+		q.pop();
+
+		for(auto x: adj[cur])
+		{
+			if(!vis[x])
+			{
+				q.push(x);
+				dis[x]=dis[cur]+1;
+				vis[x]=1;
+			}
+		}
+	}
+}
+
+signed main()
+{
+#ifndef ONLINE_JUDGE
+	// for getting input from input.txt
+	freopen("input.txt", "r", stdin);
+	// for writing output to output.txt
+	freopen("output.txt", "w", stdout);
+#endif
+
+   int t;
+   cin>>t;
+   while(t--)
+   {
+	int n, e;
+	cin >> n >> e;
+
+	for (int i = 1; i <= n; i++)
+		adj[i].clear() , vis[i] = 0;
+
+	while (e--)
+	{
+		int a, b;
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+
+    bfs(1);
+
+    cout<<dis[n]<<endl;
+   }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+Hello Sir!! Hope you are doing good.
+This is to bring your kind notice that i am interested in India intern opportunity in your company. I am currently a final year B.Tech student.
+
+I am proficient in C and C++. Likes to do problem solving. Also, have a basic knowledge of Web Development.
+
+Sir, i have cleared the qualification round of Google Code Jam in both 2019 and 2020, semifinalist of Code Gladiator 2019, have worked an open source contributor for 3 months in GSSoC in 2019, have won various coding competitions at college level and recently cleared the qualification round of Facebook HackerCup 2020 as well.
+
+If you find me suitable for this opening, kindly give me a referral so that i have a chance to work in your esteemed organization.
+Warm regards,
+
+Job id : 5397254
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
