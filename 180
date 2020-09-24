@@ -224,6 +224,8 @@ Output:
 [2,3]
 -----------------
 
+CASE 1: (if elements are in the range of 1 to n.)
+
 class Solution {
 public:
     vector<int> findDuplicates(vector<int>& nums) 
@@ -238,6 +240,36 @@ public:
         return vec;
     }
 };
+.......................................................
+CASE 2: (If all elements are in range of 0 to n-1 and return answer in sorted order).
+
+vector<int> duplicates(int a[], int n)
+{
+ 		for (int i = 0; i < n; i++)
+		{
+			int idx = a[i] % n;
+			a[idx] += n;
+		}
+
+		bool flag = 0;
+		vector<int>ans;
+
+		for (int i = 0; i < n; i++)
+		{
+			if (a[i] / n > 1)
+			{
+				ans.push_back(i);
+				flag = 1;
+			}
+		}
+
+		if (flag == 0)
+			return { -1};
+		return ans;
+       
+}
+
+TIME and SPACE: O(N) & O(1)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
