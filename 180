@@ -785,7 +785,7 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-Merge Overlapping Subintervals 
+Merge Overlapping Subintervals  (O(NlogN) and O(1))
    OR
 Merge Intervals
 
@@ -823,6 +823,31 @@ public:
         
     }
 };
+         
+    (SAME SOLUTION BUT WAY OF ASKING IS DIFFERENT) 
+	    
+ vector<pair<int,int>> overlappedInterval(vector<pair<int,int>> vec, int n) {
+    sort(vec.begin(),vec.end());
+       
+    int fir=0;
+        
+        
+    for(int i = 1; i < n; i++) {
+        
+        if (vec[fir].second >= vec[i].first )
+            vec[fir].second = max(vec[fir].second ,vec[i].second);
+        
+        else {
+            fir++;
+            vec[fir].first = vec[i].first;
+            vec[fir].second = vec[i].second;
+        }
+    }
+    vec.erase(vec.begin()+fir+1, vec.end());
+    return vec;
+}	
+
+    
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 Set Matrix Zeros 
