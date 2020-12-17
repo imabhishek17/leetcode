@@ -2589,7 +2589,7 @@ public:
             s.insert(x);
         
         int mx=0,cn=0,c=0;
-        for(int x: s)
+        for(int x: nums)
         {
             if(!s.count(x-1))
             {
