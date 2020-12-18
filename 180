@@ -2630,9 +2630,6 @@ int maxLen(int arr[], int n)
 	{ 
 		sum += arr[i]; 
 
-		if (arr[i] == 0 && max_len == 0) 
-			max_len = 1; 
-
 		if (sum == 0) 
 			max_len = i + 1; 
 
