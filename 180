@@ -2631,13 +2631,18 @@ int maxLen(int arr[], int n)
 		sum += arr[i]; 
 
 		if (sum == 0) 
-			max_len = i + 1; 
-
-		if(presum.find(sum)==presum.end()) 	
+		{
+		  max_len = i + 1;
+		}
+		
+		else
+		{
+		   if(presum.find(sum)==presum.end()) 	
 		   presum[sum] = i; 
 		 
-		if (presum.find(sum) != presum.end()) 
+		   if (presum.find(sum) != presum.end()) 
 		   max_len = max(max_len, i - presum[sum]); 
+		}
 	} 
 
 	return max_len; 
